@@ -3,17 +3,16 @@ var cnv;
 let desktop,mouse;
 
 //images
-var bg,pointer;
+var bg,pointer,pointer_black;
 
 function preload(){
   bg = loadImage("Nigerian-flag.jpg")
   pointer = loadImage("mousepointer.png")
-
+  pointer_black = loadImage("mousepointer_black.png")
 }
 
 
 function setup(){
-  //try and find a way to remove scrollbars
   cnv = createCanvas(windowWidth,windowHeight)
 
   desktop = new Desktop();
@@ -64,7 +63,11 @@ class Mouse{
 
   drawMouse(){
     //triangle(this.x-25,this.y-25,this.x,this.y+25,this.x +25,this.y +25)
-    image(pointer,mouseX,mouseY,25,25)
+    if (mouseIsPressed == false){
+      image(pointer,mouseX,mouseY,24,25)
+    } else {
+      image(pointer_black,mouseX,mouseY,24,25)
+    }
   }
   update(){
     this.drawMouse()
