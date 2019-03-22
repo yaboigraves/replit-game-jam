@@ -42,7 +42,10 @@ class Desktop{
   }
 
   drawToolbar(){
-    rect(0,windowHeight-50,windowWidth,50);
+	let tb_height = 50
+	let tb_color = color('#25A976')//Choose color for toolbar
+	fill(tb_color)
+    rect(0,windowHeight-tb_height,windowWidth-1,tb_height-1);
   }
   update(){
 
