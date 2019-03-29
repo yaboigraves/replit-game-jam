@@ -64,9 +64,11 @@ class Mouse{
   drawMouse(){
     //triangle(this.x-25,this.y-25,this.x,this.y+25,this.x +25,this.y +25)
     if (mouseIsPressed == false){
-      image(pointer,mouseX,mouseY,24,25)
+      //image(pointer,mouseX,mouseY,24,25)
+	  cursor(ARROW)
     } else {
-      image(pointer_black,mouseX,mouseY,24,25)
+      //(pointer_black,mouseX,mouseY,24,25)
+	  cursor(HAND)
     }
   }
   update(){
