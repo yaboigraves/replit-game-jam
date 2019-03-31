@@ -3,12 +3,10 @@ var cnv;
 let desktop,mouse;
 
 //images
-var bg,pointer,pointer_black;
+var bg;
 
 function preload(){
   bg = loadImage("Nigerian-flag.jpg")
-  pointer = loadImage("mousepointer.png")
-  pointer_black = loadImage("mousepointer_black.png")
 }
 
 
