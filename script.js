@@ -183,8 +183,9 @@ class Application{
 			mouseY < (this.win_y + 35)){
 				
 				this.opened = false;
+				return false;
 		}
-		return true
+		return true;
     }
     return false;
   }
