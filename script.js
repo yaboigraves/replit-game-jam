@@ -126,14 +126,14 @@ class Application{
     this.win_x = win_x;
     this.win_y = win_y;
     this.drag = false; //dragging flag
-	this.opened = true
+	this.opened = true;//open/close flag
   }
 
   drawIcon() {
 	image(this.icon, this.x, this.y, this.icon.width/7, this.icon.height/7 );
   }
 	
-  drawWindow() {
+  drawWindow() { //just some placeholder draws to test out blank windows
 	if (this.opened == true) {
 		var font = 'arial';
 		var strokecolor = 50;
@@ -177,6 +177,7 @@ class Application{
      && (mouseY >= this.win_y)
      && (mouseY <= this.win_y + this.h)
 	 && this.opened == true){
+		 //Checks to see if it is close button which is being pressed
 		 if (mouseX > (this.win_x + this.w-35) &&
 			mouseX < (this.win_x + this.w - 5) &&
 			mouseY > (this.win_y + 5) &&
