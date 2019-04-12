@@ -20,7 +20,7 @@ function setup(){
 
   //mail application (x,y,"pic file name",width,height,window_x,window_y)
   mail = new Application(10,400,"ie-logo.png",500,500,50,50);
-  mail.win.background(200);
+  //mail.win.background(200);
   
   thebank = new Bank(10,10,"bank-logo.png",350,400,150,50);
   
@@ -37,10 +37,15 @@ function draw(){
   background(100)
   image(bg,0,0,windowWidth,windowHeight)
   
-  mail.update();
+  //draw idons
+  mail.drawIcon();
+  thebank.drawIcon();
+  
+  //draw windows
+  mail.drawWindow();
   textarea.display();
   
-  thebank.update()
+  thebank.drawWindow();
     
     
   //update loops
@@ -121,23 +126,65 @@ class Application{
     this.win_x = win_x;
     this.win_y = win_y;
     this.drag = false; //dragging flag
+	this.opened = true
   }
 
-  update(){ 
-  
-    // render icon and window of the application   
-    image(this.icon, this.x, this.y, this.icon.width/7, this.icon.height/7 );
-    image(this.win,this.win_x,this.win_y,this.w,this.h);
+  drawIcon() {
+	image(this.icon, this.x, this.y, this.icon.width/7, this.icon.height/7 );
+  }
+	
+  drawWindow() {
+	if (this.opened == true) {
+		var font = 'arial';
+		var strokecolor = 50;
+		var bgcolor = 'grey';
+		var apptitle = 'Placeholder';
+		
+		this.win.textFont(font)
+		
+		//Background and Outline Rect (DRAW FIRST)
+		this.win.stroke(strokecolor);
+		this.win.strokeWeight(1);
+		this.win.rectMode(CORNER);
+		this.win.fill(bgcolor);
+		this.win.rect(0,0,this.w-1,this.h-1);
+		
+		//Top Bar of Program
+		this.win.strokeWeight(2);
+		this.win.rect(5,5,(this.w - 10),30);
+		
+		this.win.strokeWeight(4);
+		this.win.fill(255);
+		this.win.textSize(20);
+		this.win.textAlign(LEFT);
+		this.win.text(apptitle,10,29);
+		
+		//Minimize/Exit button
+		this.win.strokeWeight(2);
+		this.win.fill('lightcoral');
+		this.win.rect(this.w-35,5,30,30);
+		
+		image(this.win,this.win_x,this.win_y,this.w,this.h);
+	}
   }
 
   Windowclick() {
     // if the corresponding app window is clicked return true
-    if ( 
-     (mouseX <= (this.win_x + this.w)
-     && mouseX >= this.win_x) 
+	
+    if (
+     (mouseX <= this.win_x + this.w)
+     && (mouseX >= this.win_x) 
      && (mouseY >= this.win_y)
-     && (mouseY <= this.win_y + this.h)){
-       return true
+     && (mouseY <= this.win_y + this.h)
+	 && this.opened == true){
+		 if (mouseX > (this.win_x + this.w-35) &&
+			mouseX < (this.win_x + this.w - 5) &&
+			mouseY > (this.win_y + 5) &&
+			mouseY < (this.win_y + 35)){
+				
+				this.opened = false;
+		}
+		return true
     }
     return false;
   }
@@ -150,9 +197,19 @@ class Bank extends Application{
 		super(x,y,pic,w,h,win_x, win_y)
 		
 		//BANK SPECIFICS
-		this.balance = 0;
-		this.senders = ['princessinpink@gmail.com','steve1989@gmail.com','barbraann@yahool.com'];
-		this.transfers = [34,67,-22];
+		this.balance = 0;//Bank Balance
+		this.senders = [];//Array of sender addresses
+		this.transfers = []; //array of transfer amounts
+	}
+	
+	Windowclicked() {
+		if (mouseX > (this.win_x + this.w-35) &&
+			mouseX < (this.win_x + this.w - 5) &&
+			mouseY > (this.win_y + 5) &&
+			mouseY < (this.win_y + 35)){
+				
+				this.opened = false;
+			}
 	}
 	
 	transfer(address,amount) {
@@ -161,19 +218,26 @@ class Bank extends Application{
 		this.balance = this.balance + amount
 	} 
 	
-	update() {
+	drawIcon() {
 		image(this.icon, this.x, this.y, this.icon.width/7, this.icon.height/7 );
-		
-		let font_word = 'arial';
-		let font_num = 'monospace';
+	}
+	
+	drawWindow() {
+		if (this.opened == true) {
+		var font_word = 'arial';
+		var font_num = 'monospace';
+		var strokecolor = 50;
+		var bgcolor = 'CornflowerBlue';
+		var bgcolor_table = 200;
+		var apptitle = 'United Bank Of Nigeria';
 		
 		this.win.textFont(font_word)
 		
 		//Background and Outline Rect (DRAW FIRST)
-		this.win.stroke(50);
+		this.win.stroke(strokecolor);
 		this.win.strokeWeight(1);
 		this.win.rectMode(CORNER);
-		this.win.fill(150);
+		this.win.fill(bgcolor);
 		this.win.rect(0,0,this.w-1,this.h-1);
 		
 		//Top Bar of Program
@@ -184,7 +248,7 @@ class Bank extends Application{
 		this.win.fill(255);
 		this.win.textSize(20);
 		this.win.textAlign(LEFT);
-		this.win.text('United Bank Of Nigeria',10,29);
+		this.win.text(apptitle,10,29);
 		
 		//Minimize/Exit button
 		this.win.strokeWeight(2);
@@ -193,7 +257,7 @@ class Bank extends Application{
 		
 		//Balance tracker
 		this.win.strokeWeight(2);
-		this.win.fill(150);
+		this.win.fill(bgcolor);
 		this.win.rect(5,40,(this.w - 10),75);
 		
 		this.win.strokeWeight(0);
@@ -212,7 +276,7 @@ class Bank extends Application{
 		
 		//Recent transfers
 		this.win.strokeWeight(2);
-		this.win.fill(150);
+		this.win.fill(bgcolor);
 		this.win.rect(5,120,(this.w - 10),30);
 		
 		this.win.strokeWeight(0);
@@ -222,7 +286,7 @@ class Bank extends Application{
 		this.win.text('Recent Transfers:',10,144);
 		
 		this.win.strokeWeight(2);
-		this.win.fill(255);
+		this.win.fill(bgcolor_table);
 		this.win.rect(5,150,(this.w - 10),245);
 		
 		this.win.line(Math.floor(this.w/1.5),150,Math.floor(this.w/1.5),395);
@@ -244,10 +308,10 @@ class Bank extends Application{
 				this.win.textAlign(RIGHT);
 				let amt = this.transfers[this.transfers.length-(1+i)];
 				if (amt>0) {
-					this.win.fill('#008A58');
+					this.win.fill('DarkGreen');
 					var amtStr = '+' + String(amt)+'.00';
 				} else {
-					this.win.fill('lightcoral');
+					this.win.fill('FireBrick');
 					var amtStr = String(amt)+'.00';
 				}
 				this.win.textFont(font_num);
@@ -257,7 +321,9 @@ class Bank extends Application{
 		}
 		
 		image(this.win,this.win_x,this.win_y,this.w,this.h);
-		this.balance = this.balance +1;
+		//this.balance = this.balance +1;
+		//console.log(mouseX)
+		}
 	}
 }
 
@@ -378,8 +444,16 @@ function mousePressed (){
     mail.drag = true; 
     
     //offsets are global vars ( make it a application attribute?)
-    x_offset = mail.win_x - mouseX;
-    y_offset = mail.win_y - mouseY;
+    x_offset_m = mail.win_x - mouseX;
+    y_offset_m = mail.win_y - mouseY;
+  }
+  
+  if (thebank.Windowclick()) {
+	thebank.drag = true; 
+    
+    //offsets are global vars ( make it a application attribute?)
+    x_offset_b = thebank.win_x - mouseX;
+    y_offset_b = thebank.win_y - mouseY;
   }
 }
 
@@ -388,9 +462,14 @@ function mouseDragged() {
     
   //while dragging mail app_window
   if (mail.drag == true){
-  console.log(x_offset)
-  mail.win_x = mouseX + x_offset;
-  mail.win_y = mouseY +y_offset;
+  console.log(x_offset_m)
+  mail.win_x = mouseX + x_offset_m;
+  mail.win_y = mouseY +y_offset_m;
+  }
+  if (thebank.drag == true){
+  console.log(x_offset_b)
+  thebank.win_x = mouseX + x_offset_b;
+  thebank.win_y = mouseY +y_offset_b;
   }
 }
 
@@ -398,6 +477,7 @@ function mouseDragged() {
 function mouseReleased(){
   //turn drag status off    
   mail.drag = false;
+  thebank.drag = false;
 }
 
 //P5 event function
@@ -418,4 +498,5 @@ function doubleClicked(){
       console.log("Im currently clicking the interent explore icon");
       
   }
+ 
 }
