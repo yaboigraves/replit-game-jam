@@ -21,6 +21,10 @@ function setup(){
   //mail application (x,y,"pic file name",width,height,window_x,window_y)
   mail = new Application(10,400,"ie-logo.png",500,500,50,50);
   mail.win.background(200);
+  
+  thebank = new Bank(10,10,"bank-logo.png",350,400,150,50);
+  
+  thebank.transfer('hiimdad@hotmail.com',100);
     
     
   textarea = new Textdata();
@@ -35,6 +39,8 @@ function draw(){
   
   mail.update();
   textarea.display();
+  
+  thebank.update()
     
     
   //update loops
@@ -137,6 +143,113 @@ class Application{
   }
 
 
+}
+
+class Bank extends Application{
+	constructor(x,y,pic,w,h,win_x, win_y){
+		super(x,y,pic,w,h,win_x, win_y)
+		
+		//BANK SPECIFICS
+		this.balance = 0;
+		this.senders = ['princessinpink@gmail.com','steve1989@gmail.com','barbraann@yahool.com'];
+		this.transfers = [34,67,-22];
+	}
+	
+	transfer(address,amount) {
+		this.senders.push(address)
+		this.transfers.push(amount)
+		this.balance = this.balance + amount
+	} 
+	
+	update() {
+		image(this.icon, this.x, this.y, this.icon.width/7, this.icon.height/7 );
+		
+		//Background and Outline Rect (DRAW FIRST)
+		this.win.stroke(50)
+		this.win.strokeWeight(1)
+		this.win.rectMode(CORNER)
+		this.win.fill(150)
+		this.win.rect(0,0,this.w-1,this.h-1)
+		
+		//Top Bar of Program
+		this.win.strokeWeight(2)
+		this.win.rect(5,5,(this.w - 10),30);
+		
+		this.win.strokeWeight(4)
+		this.win.fill(255)
+		this.win.textSize(20);
+		this.win.textAlign(LEFT)
+		this.win.text('United Bank Of Nigeria',10,29);
+		
+		//Minimize/Exit button
+		this.win.strokeWeight(2)
+		this.win.fill('lightcoral')
+		this.win.rect(this.w-35,5,30,30)
+		
+		//Balance tracker
+		this.win.strokeWeight(2)
+		this.win.fill(150)
+		this.win.rect(5,40,(this.w - 10),75);
+		
+		this.win.strokeWeight(0)
+		this.win.fill(0)
+		this.win.textSize(20);
+		this.win.textAlign(LEFT)
+		this.win.text('Your Balance:',10,60);
+		
+		this.win.strokeWeight(4)
+		this.win.fill('springgreen')
+		this.win.textSize(30);
+		this.win.textAlign(RIGHT)
+		this.win.text(String(this.balance)+' USD',this.w-10,110);
+		
+		//Recent transfers
+		this.win.strokeWeight(2)
+		this.win.fill(150)
+		this.win.rect(5,120,(this.w - 10),30);
+		
+		this.win.strokeWeight(0)
+		this.win.fill(0)
+		this.win.textSize(20);
+		this.win.textAlign(LEFT)
+		this.win.text('Recent Transfers:',10,144);
+		
+		this.win.strokeWeight(2)
+		this.win.fill(255)
+		this.win.rect(5,150,(this.w - 10),245);
+		
+		this.win.line(Math.floor(this.w/1.5),150,Math.floor(this.w/1.5),395)
+		this.win.line(5,200,this.w - 5,200)
+		this.win.line(5,250,this.w - 5,250)
+		this.win.line(5,300,this.w - 5,300)
+		this.win.line(5,350,this.w - 5,350)
+		
+		this.win.fill(0);
+		this.win.textSize(15);
+		this.win.strokeWeight(0)
+		
+		
+		for (var i=0; i < 4;i++){
+			if (this.senders.length > i) {
+				this.win.fill(0);
+				this.win.textAlign(LEFT);
+				this.win.text(this.senders[this.senders.length-(1+i)],10,190 + 50*i);
+				this.win.textAlign(RIGHT);
+				let amt = this.transfers[this.transfers.length-(1+i)];
+				if (amt>0) {
+					this.win.fill('#008A58');
+					var amtStr = '+' + String(amt)+'.00';
+				} else {
+					this.win.fill('lightcoral');
+					var amtStr = String(amt)+'.00';
+				}
+				this.win.text(amtStr,this.w-10,190 + 50*i);
+			}
+		}
+		
+		image(this.win,this.win_x,this.win_y,this.w,this.h);
+		this.balance = this.balance +1;
+	}
 }
 
 // INCOMPLETE====
