@@ -203,16 +203,6 @@ class Bank extends Application{
 		this.transfers = []; //array of transfer amounts
 	}
 	
-	Windowclicked() {
-		if (mouseX > (this.win_x + this.w-35) &&
-			mouseX < (this.win_x + this.w - 5) &&
-			mouseY > (this.win_y + 5) &&
-			mouseY < (this.win_y + 35)){
-				
-				this.opened = false;
-			}
-	}
-	
 	transfer(address,amount) {
 		this.senders.push(address)
 		this.transfers.push(amount)
