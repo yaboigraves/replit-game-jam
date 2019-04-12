@@ -164,69 +164,76 @@ class Bank extends Application{
 	update() {
 		image(this.icon, this.x, this.y, this.icon.width/7, this.icon.height/7 );
 		
+		let font_word = 'arial';
+		let font_num = 'monospace';
+		
+		this.win.textFont(font_word)
+		
 		//Background and Outline Rect (DRAW FIRST)
-		this.win.stroke(50)
-		this.win.strokeWeight(1)
-		this.win.rectMode(CORNER)
-		this.win.fill(150)
-		this.win.rect(0,0,this.w-1,this.h-1)
+		this.win.stroke(50);
+		this.win.strokeWeight(1);
+		this.win.rectMode(CORNER);
+		this.win.fill(150);
+		this.win.rect(0,0,this.w-1,this.h-1);
 		
 		//Top Bar of Program
-		this.win.strokeWeight(2)
+		this.win.strokeWeight(2);
 		this.win.rect(5,5,(this.w - 10),30);
 		
-		this.win.strokeWeight(4)
-		this.win.fill(255)
+		this.win.strokeWeight(4);
+		this.win.fill(255);
 		this.win.textSize(20);
-		this.win.textAlign(LEFT)
+		this.win.textAlign(LEFT);
 		this.win.text('United Bank Of Nigeria',10,29);
 		
 		//Minimize/Exit button
-		this.win.strokeWeight(2)
-		this.win.fill('lightcoral')
-		this.win.rect(this.w-35,5,30,30)
+		this.win.strokeWeight(2);
+		this.win.fill('lightcoral');
+		this.win.rect(this.w-35,5,30,30);
 		
 		//Balance tracker
-		this.win.strokeWeight(2)
-		this.win.fill(150)
+		this.win.strokeWeight(2);
+		this.win.fill(150);
 		this.win.rect(5,40,(this.w - 10),75);
 		
-		this.win.strokeWeight(0)
-		this.win.fill(0)
+		this.win.strokeWeight(0);
+		this.win.fill(0);
 		this.win.textSize(20);
-		this.win.textAlign(LEFT)
-		this.win.text('Your Balance:',10,60);
+		this.win.textAlign(LEFT);
+		this.win.text('Your Balance:',10,65);
 		
-		this.win.strokeWeight(4)
-		this.win.fill('springgreen')
+		this.win.strokeWeight(4);
+		this.win.fill('springgreen');
 		this.win.textSize(30);
-		this.win.textAlign(RIGHT)
+		this.win.textAlign(RIGHT);
+		this.win.textFont(font_num);
 		this.win.text(String(this.balance)+' USD',this.w-10,110);
+		this.win.textFont(font_word);
 		
 		//Recent transfers
-		this.win.strokeWeight(2)
-		this.win.fill(150)
+		this.win.strokeWeight(2);
+		this.win.fill(150);
 		this.win.rect(5,120,(this.w - 10),30);
 		
-		this.win.strokeWeight(0)
-		this.win.fill(0)
+		this.win.strokeWeight(0);
+		this.win.fill(0);
 		this.win.textSize(20);
-		this.win.textAlign(LEFT)
+		this.win.textAlign(LEFT);
 		this.win.text('Recent Transfers:',10,144);
 		
-		this.win.strokeWeight(2)
-		this.win.fill(255)
+		this.win.strokeWeight(2);
+		this.win.fill(255);
 		this.win.rect(5,150,(this.w - 10),245);
 		
-		this.win.line(Math.floor(this.w/1.5),150,Math.floor(this.w/1.5),395)
-		this.win.line(5,200,this.w - 5,200)
-		this.win.line(5,250,this.w - 5,250)
-		this.win.line(5,300,this.w - 5,300)
-		this.win.line(5,350,this.w - 5,350)
+		this.win.line(Math.floor(this.w/1.5),150,Math.floor(this.w/1.5),395);
+		this.win.line(5,200,this.w - 5,200);
+		this.win.line(5,250,this.w - 5,250);
+		this.win.line(5,300,this.w - 5,300);
+		this.win.line(5,350,this.w - 5,350);
 		
 		this.win.fill(0);
 		this.win.textSize(15);
-		this.win.strokeWeight(0)
+		this.win.strokeWeight(0);
 		
 		
 		for (var i=0; i < 4;i++){
@@ -243,7 +250,9 @@ class Bank extends Application{
 					this.win.fill('lightcoral');
 					var amtStr = String(amt)+'.00';
 				}
+				this.win.textFont(font_num);
 				this.win.text(amtStr,this.w-10,190 + 50*i);
+				this.win.textFont(font_word);
 			}
 		}
 		
