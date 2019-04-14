@@ -84,6 +84,7 @@ class WindowStack{
 	whichWindowClicked(){
 		//returns the window that was just clicked
 		//checks for clicks starting with top window
+		//returns null if no window is clicked
 		for (var i = 0; i < this.stack.length;i++) {
 			var nextApp = this.stack[this.stack.length - (i+1)];
 			if (nextApp.Windowclick()){
@@ -149,7 +150,6 @@ class Application{
     this.win_x = win_x;
     this.win_y = win_y;
     this.drag = false; //dragging flag
-	this.opened = false;//open/close flag
   }
 
   drawIcon() {
@@ -157,38 +157,38 @@ class Application{
   }
 	
   drawWindow() { //just some placeholder draws to test out blank windows
-	if (this.opened == true) {
-		var font = 'arial';
-		var strokecolor = 50;
-		var bgcolor = 'grey';
-		var apptitle = 'Placeholder';
+  
+	//variables to change window appearance
+	var font = 'arial';
+	var strokecolor = 50;
+	var bgcolor = 'grey';
+	var apptitle = 'Placeholder';
 		
-		this.win.textFont(font)
+	this.win.textFont(font)
 		
-		//Background and Outline Rect (DRAW FIRST)
-		this.win.stroke(strokecolor);
-		this.win.strokeWeight(1);
-		this.win.rectMode(CORNER);
-		this.win.fill(bgcolor);
-		this.win.rect(0,0,this.w-1,this.h-1);
+	//Background and Outline Rect (DRAW FIRST)
+	this.win.stroke(strokecolor);
+	this.win.strokeWeight(1);
+	this.win.rectMode(CORNER);
+	this.win.fill(bgcolor);
+	this.win.rect(0,0,this.w-1,this.h-1);
 		
-		//Top Bar of Program
-		this.win.strokeWeight(2);
-		this.win.rect(5,5,(this.w - 10),30);
+	//Top Bar of Program
+	this.win.strokeWeight(2);
+	this.win.rect(5,5,(this.w - 10),30);
 		
-		this.win.strokeWeight(4);
-		this.win.fill(255);
-		this.win.textSize(20);
-		this.win.textAlign(LEFT);
-		this.win.text(apptitle,10,29);
+	this.win.strokeWeight(4);
+	this.win.fill(255);
+	this.win.textSize(20);
+	this.win.textAlign(LEFT);
+	this.win.text(apptitle,10,29);
 		
-		//Minimize/Exit button
-		this.win.strokeWeight(2);
-		this.win.fill('lightcoral');
-		this.win.rect(this.w-35,5,30,30);
+	//Minimize/Exit button
+	this.win.strokeWeight(2);
+	this.win.fill('lightcoral');
+	this.win.rect(this.w-35,5,30,30);
 		
-		image(this.win,this.win_x,this.win_y,this.w,this.h);
-	}
+	image(this.win,this.win_x,this.win_y,this.w,this.h);
   }
 
   Windowclick() {
@@ -198,8 +198,7 @@ class Application{
      (mouseX <= this.win_x + this.w)
      && (mouseX >= this.win_x) 
      && (mouseY >= this.win_y)
-     && (mouseY <= this.win_y + this.h)
-	 && this.opened == true){
+     && (mouseY <= this.win_y + this.h)){
 		return true;
     }
     return false;
@@ -211,18 +210,17 @@ class Application{
 		mouseX < (this.win_x + this.w - 5) &&
 		mouseY > (this.win_y + 5) &&
 		mouseY < (this.win_y + 35)){
-			this.opened = false;
 			return true;
 	}
 	return false;
   }
   
   Iconclick() {
+	////Checks to see if the desktop icon is being clicked
 	if (mouseX > (this.x) &&
 		mouseX < (this.x + this.icon.width/7) &&
 		mouseY > (this.y) &&
 		mouseY < (this.y + this.icon.height/7)){
-			this.opened = true;
 			return true;
 	}
 	return false;
@@ -241,17 +239,20 @@ class Bank extends Application{
 	}
 	
 	transfer(address,amount) {
+		//accepts a string for the address and a dollar amount
 		this.senders.push(address)
 		this.transfers.push(amount)
 		this.balance = this.balance + amount
 	} 
 	
 	drawIcon() {
+		//draws the icon on the desktop]
 		image(this.icon, this.x, this.y, this.icon.width/7, this.icon.height/7 );
 	}
 	
 	drawWindow() {
-		if (this.opened == true) {
+		
+		//variables to change window appearance
 		var font_word = 'arial';
 		var font_num = 'monospace';
 		var strokecolor = 50;
@@ -327,7 +328,7 @@ class Bank extends Application{
 		this.win.textSize(15);
 		this.win.strokeWeight(0);
 		
-		
+		//Display list of recent transfers
 		for (var i=0; i < 4;i++){
 			if (this.senders.length > i) {
 				this.win.fill(0);
@@ -349,7 +350,6 @@ class Bank extends Application{
 		}
 		
 		image(this.win,this.win_x,this.win_y,this.w,this.h);
-		}
 	}
 }
 
@@ -466,12 +466,12 @@ function keyTyped(){
 function mousePressed (){
   //Checks to see which app is being pressed and returns that app
   var windowClicked = windowStack.whichWindowClicked();
-  console.log(windowClicked)
-  
   //Make sure some window is being returned
   if (windowClicked != null){
 	//check to see if the close button was clicked
+	console.log('Clicked:',windowClicked.constructor.name)
 	if (windowClicked.Closeclick()){
+		console.log('Closed')
 		windowStack.remove(windowClicked);
 	// if any other area clicked
 	} else{
@@ -481,9 +481,12 @@ function mousePressed (){
 		y_offset = windowClicked.win_y - mouseY;
 	}
   }else{//If NO window is clicked
+	//Check to see if any icons are being pressed
 	if (mail.Iconclick()){
+		console.log('Clicked: Mail Icon')
 		windowStack.push(mail)
 	} else if (bank.Iconclick()){
+		console.log('Clicked: Bank Icon')
 		windowStack.push(bank)
 	}
   }
@@ -491,23 +494,21 @@ function mousePressed (){
 
 //P5 event function
 function mouseDragged() {
-    
-  //while dragging app_window
-  if (mail.drag == true){
-  mail.win_x = mouseX + x_offset;
-  mail.win_y = mouseY + y_offset;
-  }
-  if (bank.drag == true){
-  bank.win_x = mouseX + x_offset;
-  bank.win_y = mouseY + y_offset;
+	// moves any windows wihch are currently being dragged
+  for (var i = 0; i < windowStack.stack.length; i++){
+	  if (windowStack.stack[i].drag == true){
+		windowStack.stack[i].win_x = mouseX + x_offset;
+		windowStack.stack[i].win_y = mouseY + y_offset;
+	  }
   }
 }
 
 //P5 event function
 function mouseReleased(){
-  //turn drag status off    
-  mail.drag = false;
-  bank.drag = false;
+  //turn drag status off for all active windows
+  for (var i = 0; i < windowStack.stack.length; i++){
+	windowStack.stack[i].drag = false;
+	 }
 }
 
 //P5 event function
@@ -525,7 +526,7 @@ function doubleClicked(){
      && (mouseY <= mail.y +mail.icon.height/7))){
 
       // code here
-      console.log("Im currently clicking the interent explore icon");
+      //console.log("Im currently clicking the interent explore icon");
       
   }
  
