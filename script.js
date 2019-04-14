@@ -29,11 +29,6 @@ function setup(){
   bank.transfer('hiimdad@hotmail.com',100);//Test out a single transfer call, will remove later
   
   windowStack = new WindowStack();//Create the windowStack
-  
-  //Push the apps onto the stack
-  windowStack.push(mail);
-  windowStack.push(bank);
-    
     
   textarea = new Textdata();
   // textarea.makegrid();
@@ -42,7 +37,7 @@ function setup(){
 
 function draw(){
   noCursor()
-  //background(100)
+  background(100)
   image(bg,0,0,windowWidth,windowHeight)
   
   //draw icons
@@ -154,7 +149,7 @@ class Application{
     this.win_x = win_x;
     this.win_y = win_y;
     this.drag = false; //dragging flag
-	this.opened = true;//open/close flag
+	this.opened = false;//open/close flag
   }
 
   drawIcon() {
@@ -217,6 +212,17 @@ class Application{
 		mouseY > (this.win_y + 5) &&
 		mouseY < (this.win_y + 35)){
 			this.opened = false;
+			return true;
+	}
+	return false;
+  }
+  
+  Iconclick() {
+	if (mouseX > (this.x) &&
+		mouseX < (this.x + this.icon.width/7) &&
+		mouseY > (this.y) &&
+		mouseY < (this.y + this.icon.height/7)){
+			this.opened = true;
 			return true;
 	}
 	return false;
@@ -473,6 +479,12 @@ function mousePressed (){
 		windowClicked.drag = true;
 		x_offset = windowClicked.win_x - mouseX;
 		y_offset = windowClicked.win_y - mouseY;
+	}
+  }else{//If NO window is clicked
+	if (mail.Iconclick()){
+		windowStack.push(mail)
+	} else if (bank.Iconclick()){
+		windowStack.push(bank)
 	}
   }
 }
