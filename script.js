@@ -184,7 +184,7 @@ class Application{
 	this.win.rect(0,0,this.w-1,this.h-1);
 		
 	//Top Bar of Program
-	this.win.strokeWeight(1);
+	this.win.strokeWeight(2);
 	this.win.rect(5,5,(this.w - 10),30);
 		
 	this.win.strokeWeight(1.2);
@@ -284,7 +284,7 @@ class Bank extends Application{
 		this.win.strokeWeight(2);
 		this.win.rect(5,5,(this.w - 10),30);
 		
-		this.win.strokeWeight(4);
+		this.win.strokeWeight(1.2);
 		this.win.fill(255);
 		this.win.textSize(20);
 		this.win.textAlign(LEFT);
