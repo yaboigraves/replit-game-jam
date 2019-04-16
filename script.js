@@ -395,7 +395,65 @@ class Mail extends Application {
     
 }
 
-
+class Note extends Application{
+	constructor(x,y,pic,w,h,win_x, win_y){
+		super(x,y,pic,w,h,win_x, win_y)
+		
+		//Note specifics
+		this.message = 'Note to self: need to make lots of money today! Make sure to write good e-mails to get those gullible Americans to send you their money! Use the e-mail app to write e-mails. Use the bank app to track how much you have made!';
+	}
+	
+	drawWindow() { //just some placeholder draws to test out blank windows
+  
+	//variables to change window appearance
+	var font = 'arial';
+	var font_notes = 'cursive';
+	var strokecolor = 50;
+	var bgcolor = 'khaki';
+	var apptitle = 'Notes';
+	var textsize_notes = 15;
+		
+	this.win.textFont(font)
+		
+	//Background and Outline Rect (DRAW FIRST)
+	this.win.stroke(strokecolor);
+	this.win.strokeWeight(1);
+	this.win.rectMode(CORNER);
+	this.win.fill(bgcolor);
+	this.win.rect(0,0,this.w-1,this.h-1);
+		
+	//Top Bar of Program
+	this.win.strokeWeight(2);
+	this.win.rect(5,5,(this.w - 10),30);
+		
+	this.win.strokeWeight(4);
+	this.win.fill(255);
+	this.win.textSize(20);
+	this.win.textAlign(LEFT);
+	this.win.text(apptitle,10,29);
+		
+	//Minimize/Exit button
+	this.win.strokeWeight(2);
+	this.win.fill('lightcoral');
+	this.win.rect(this.w-35,5,30,30);
+	
+	//text Space rect
+	this.win.strokeWeight(2);
+	this.win.fill(bgcolor);
+	this.win.rect(5,40,(this.w - 10),(this.h-45));
+	
+	//Actual text
+	this.win.strokeWeight(0)
+	this.win.fill('black')
+	this.win.textFont(font_notes)
+	this.win.textAlign(LEFT);
+	this.win.textSize(textsize_notes);
+	this.win.text(this.message,20,50,(this.w - 20),(this.h-55));
+		
+	image(this.win,this.win_x,this.win_y,this.w,this.h);
+	}
+	
+}
 
 
 //P5 event function
