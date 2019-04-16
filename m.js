@@ -3,12 +3,14 @@ var counts = {};
 var keys = [];
 var allwords = [];
 
-var files = [ 'n2.txt', 'n1.txt', 'n3.txt'];
+var files = [ 'n2.txt', 'n1.txt', 'n3.txt', 'n4.txt', 'n5.txt'];
 
 function preload() {
   // txt = loadStrings('/data/n1.txt')
   for(var i = 0; i < files.length; i++ ) {
-    txt[i] = loadStrings('/data/' + files[i]);
+//     txt[i] = loadStrings('/data/' + files[i]);
+        txt[i] = loadStrings(files[i]);
+    
   }
 }
 
