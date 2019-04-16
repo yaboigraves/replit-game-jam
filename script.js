@@ -1,7 +1,5 @@
-
 var cnv;
-let desktop,mouse;
-let textarea; // uded to holds the textarea object
+//let desktop,mouse;
 
 var windowStack;
 var mail;
@@ -9,7 +7,6 @@ var bank;
 
 //images
 var bg;
-let start;
 
 
 function preload(){
@@ -22,16 +19,15 @@ function setup(){
   desktop = new Desktop();
 
   //mail application (x,y,"pic file name",width,height,window_x,window_y)
-  mail = new Application(10,400,"ie-logo.png",500,500,50,50);
-  //mail.win.background(200);
+  mail = new Mail(10,400,"ie-logo.png",500,500,50,50);
+  
   
   bank = new Bank(10,10,"bank-logo.png",350,400,150,50);
   bank.transfer('hiimdad@hotmail.com',100);//Test out a single transfer call, will remove later
   
   windowStack = new WindowStack();//Create the windowStack
+
     
-  textarea = new Textdata();
-  // textarea.makegrid();
 
 }
 
@@ -41,12 +37,26 @@ function draw(){
   image(bg,0,0,windowWidth,windowHeight)
   
   //draw icons
-  mail.drawIcon();
   bank.drawIcon();
+ 
+  mail.drawIcon();
+  
   
   //draw windows
-  windowStack.drawWindows()
-  textarea.display();
+  windowStack.drawWindows();
+
+  
+  mail.editor.position(mail.win_x+200, mail.win_y+50); // this line is used to update the position of the editor 
+
+  if(mail.editor_status == "off"){
+    mail.editor.hide(); 
+  }
+  else if (mail.editor_status =="on"){
+    mail.editor.show();
+  }
+
+  
+
     
   //misc 
   desktop.update()
@@ -162,7 +172,7 @@ class Application{
 	var font = 'arial';
 	var strokecolor = 50;
 	var bgcolor = 'grey';
-	var apptitle = 'Placeholder';
+	var apptitle = 'Mail';
 		
 	this.win.textFont(font)
 		
@@ -174,10 +184,10 @@ class Application{
 	this.win.rect(0,0,this.w-1,this.h-1);
 		
 	//Top Bar of Program
-	this.win.strokeWeight(2);
+	this.win.strokeWeight(1);
 	this.win.rect(5,5,(this.w - 10),30);
 		
-	this.win.strokeWeight(4);
+	this.win.strokeWeight(1.2);
 	this.win.fill(255);
 	this.win.textSize(20);
 	this.win.textAlign(LEFT);
@@ -187,7 +197,8 @@ class Application{
 	this.win.strokeWeight(2);
 	this.win.fill('lightcoral');
 	this.win.rect(this.w-35,5,30,30);
-		
+
+    //draws the window  
 	image(this.win,this.win_x,this.win_y,this.w,this.h);
   }
 
@@ -210,7 +221,7 @@ class Application{
 		mouseX < (this.win_x + this.w - 5) &&
 		mouseY > (this.win_y + 5) &&
 		mouseY < (this.win_y + 35)){
-			return true;
+        return true;
 	}
 	return false;
   }
@@ -347,144 +358,85 @@ class Bank extends Application{
 				this.win.text(amtStr,this.w-10,190 + 50*i);
 				this.win.textFont(font_word);
 			}
-		}
-		
+		}	
 		image(this.win,this.win_x,this.win_y,this.w,this.h);
 	}
 }
+//
 
-// INCOMPLETE====
-class Textdata {
+class Mail extends Application {
 // the text editor 
-  constructor(){
-    this.x = mail.win_x;
-    this.y = mail.win_y; 
-    this.width = mail.w; 
-    this.height = mail.h; 
-    this.data = [];
-
-    this.pointer = {
-                    "x":mail.win_x + 7, 
-                    "y":mail.win_y + 13,
-                    "w":2,
-                    "h":13
-                    }; 
+    constructor(x,y,pic,w,h,win_x, win_y){
+		super(x,y,pic,w,h,win_x, win_y);
+        this.editor_x = this.win_x+100;
+        this.editor_y = this.win_y+50;
+        this.editor_w = this.w/2; 
+        this.editor_h = this.h-100;
+        this.editor_status = "off";
+        this.editor = createElement('textarea');
+        this.editor.position(this.editor_x,this.editor_y);
+        this.editor.size(this.w/2, this.h-100);
+        this.editor.attribute("maxlength","1400");
+	}
     
-    this.state = "on";
-    this.counter = 0;
-    this.blink = "on";
-    //console.log(this.pointer["x"])
-    //console.log(mail.win_x)
-  }
+    editorNotClicked(){
+        if ( //checks if the editor is clicked return FALSE
+             ((mouseX <= this.editor_x + this.editor_w)
+             && (mouseX >= this.editor_x)) 
+             && (mouseY >= this.editor_y)
+             && (mouseY <= this.editor_y + this.editor_h)){
 
-  makegrid(){
-    for ( var i = 0; i <100; i++ ){
-      this.data.push('');   
+            console.log("text editor is clciked")
+		        return false;
     }
-    console.log(this.data); 
-   }
-
-  pointer_update(){
-    this.pointer["x"] = mail.win_x;
-    this.pointer["y"] = mail.win_y;
+    return true;
   }
-
-  display(){
     
-    // fill black for the text
-    fill(0);
-    text(this.data.join(""), mail.win_x + 10, mail.win_y + 10, mail.w, mail.y);
-
-
-    // turn on blinking pointer
-    if (this.blink ==="on"){
-      fill(0,0,0,255)
-      rect(this.pointer["x"], this.pointer["y"], this.pointer["w"], this.pointer["h"]);
-      this.counter += 1;
-      if(this.counter>= 50){
-        this.blink = "off";
-      }
-    }
-
-    //turn off blinking pointer
-    else if (this.blink === "off" ){
-      noStroke();
-      fill(200);
-      rect(this.pointer["x"], this.pointer["y"], this.pointer["w"], this.pointer["h"]);
-      this.counter -=1;
-      if (this.counter <= 0){
-        this.blink = "on";
-      }
-
-    }
-    //remove all fill effect 
-    fill(255,255,255);
-  }
-
-}
-// textarea class incomplete====
-
-//P5 event function
-function keyPressed(){
-  /*used to handle special keypresses like backspace */
     
-  //[BackSpace] keycode is 8
-  if (keyCode === 8 && textarea.state ==="on"){
-      textarea.data.pop();
-      textarea.pointer["x"] -= textWidth(textarea.data[textarea.data.length -1]);
-
-  }
 }
 
-//P5 event function
-function keyTyped(){
-  /*used to handle regular ascii keypress. 
-    - it ignores backspace,shifts,CRTL,ALT
-  */
 
-  
-  //incomplete=========================
-  switch(textarea.state){
-    case "off":
-      break;
-      
-    case "on":
-      textarea.data.push(key);
-      if (textarea.pointer["x"] > 500){
-        textarea.pointer["x"] = mail.win_x + 7;
-        textarea.pointer["y"] += 13;
-      }
-      textarea.pointer["x"] += textWidth(key)
-      
-      break;
-  }
-//incomplete===========================
-    
-}
+
 
 //P5 event function
 function mousePressed (){
   //Checks to see which app is being pressed and returns that app
+    
   var windowClicked = windowStack.whichWindowClicked();
   //Make sure some window is being returned
+
   if (windowClicked != null){
 	//check to see if the close button was clicked
 	console.log('Clicked:',windowClicked.constructor.name)
-	if (windowClicked.Closeclick()){
-		console.log('Closed')
-		windowStack.remove(windowClicked);
+	  if (windowClicked.Closeclick()){
+      //hide text
+      if(windowClicked.constructor.name == "Mail"){
+          mail.editor_status ="off";
+      }
+		  console.log('Closed')
+		  windowStack.remove(windowClicked);
+
 	// if any other area clicked
-	} else{
-		windowStack.push(windowClicked);
-		windowClicked.drag = true;
-		x_offset = windowClicked.win_x - mouseX;
-		y_offset = windowClicked.win_y - mouseY;
-	}
+	  }else{
+      if (mail.editorNotClicked()){
+        windowStack.push(windowClicked);
+        windowClicked.drag = true;
+        x_offset = windowClicked.win_x - mouseX;
+        y_offset = windowClicked.win_y - mouseY;
+      }
+      else{
+        windowClicked.drag = false;
+      }
+	  } 
+
   }else{//If NO window is clicked
 	//Check to see if any icons are being pressed
-	if (mail.Iconclick()){
-		console.log('Clicked: Mail Icon')
-		windowStack.push(mail)
+	if (mail.Iconclick()&&mail.editor_status=="off"){
+		console.log('Clicked: Mail Icon');
+		windowStack.push(mail);
+    mail.editor_status="on";
+
+
 	} else if (bank.Iconclick()){
 		console.log('Clicked: Bank Icon')
 		windowStack.push(bank)
