@@ -47,8 +47,8 @@ function draw(){
   //draw windows
   windowStack.drawWindows();
 
-  
-  mail.editor.position(mail.win_x+200, mail.win_y+50); // this line is used to update the position of the editor 
+  // this line is used to update the position of the editor 
+  mail.editor.position(mail.win_x+200, mail.win_y+50); 
 
   //only show text box if mail app is on top. 
   //Switch method to appInstack(mail) to show text box when mail app is opened at all.
@@ -138,7 +138,7 @@ class Desktop{
 
 }
 
- function drawMouse(){
+function drawMouse(){
 	 //Handles drawing the mouse, including what it looks like
     if (mouseIsPressed == false){
 	  cursor(ARROW)
@@ -374,13 +374,13 @@ class Mail extends Application {
 // the text editor 
     constructor(x,y,pic,w,h,win_x, win_y){
 		super(x,y,pic,w,h,win_x, win_y);
-        this.editor_x = this.win_x+100;
+        this.editor_x = this.win_x+200;
         this.editor_y = this.win_y+50;
         this.editor_w = this.w/2; 
-        this.editor_h = this.h-100;
+        this.editor_h = this.h-80;
         this.editor = createElement('textarea');
-        this.editor.position(this.editor_x,this.editor_y);
-        this.editor.size(this.w/2, this.h-100);
+        this.editor.position(this.editor_x,this.editor_y); //inital position
+        this.editor.size(this.editor_w, this.editor_h); 
         this.editor.attribute("maxlength","1400");
 	}
     
@@ -388,12 +388,12 @@ class Mail extends Application {
 		if (windowStack.getTopApp() != mail){
 			return true;
 		}
-		//Needs Fixing
+		//fixed
         if ( //checks if the editor is clicked return FALSE
-             (mouseX <= this.editor_x + this.editor_w)
-             && (mouseX >= this.editor_x)
-             && (mouseY >= this.editor_y)
-             && (mouseY <= this.editor_y + this.editor_h)){
+             (mouseX <= ((this.win_x+200) + this.editor_w)
+             && (mouseX >= this.editor_x))
+             && ((mouseY >= this.editor_y)
+             && (mouseY <= (this.win_y+50) + this.editor_h))){
             console.log("text editor is clicked")
 		        return false;
     }
