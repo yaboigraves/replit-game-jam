@@ -1,9 +1,9 @@
 var cnv;
-//let desktop,mouse;
 
 var windowStack;
 var mail;
 var bank;
+var note;
 
 //images
 var bg;
@@ -19,16 +19,17 @@ function setup(){
   desktop = new Desktop();
 
   //mail application (x,y,"pic file name",width,height,window_x,window_y)
-  mail = new Mail(10,400,"ie-logo.png",500,500,50,50);
+  mail = new Mail(windowWidth/2,windowHeight-40,"email.png",500,500,0,0);
   
-  
-  bank = new Bank(10,10,"bank-logo.png",350,400,150,50);
+  bank = new Bank(windowWidth/4,windowHeight-40,"bank.png",350,400,0,0);
   bank.transfer('hiimdad@hotmail.com',100);//Test out a single transfer call, will remove later
   
+  note = new Note(windowWidth/(4/3),windowHeight-40,"notes.png",400,500,0,0);
+  
   windowStack = new WindowStack();//Create the windowStack
-
-    
-
+  
+  //start game with note app open
+  windowStack.push(note);
 }
 
 function draw(){
@@ -36,11 +37,12 @@ function draw(){
   background(100)
   image(bg,0,0,windowWidth,windowHeight)
   
+  //draw toolbar
+  desktop.update()
   //draw icons
   bank.drawIcon();
- 
   mail.drawIcon();
-  
+  note.drawIcon();
   
   //draw windows
   windowStack.drawWindows();
@@ -48,18 +50,15 @@ function draw(){
   
   mail.editor.position(mail.win_x+200, mail.win_y+50); // this line is used to update the position of the editor 
 
-  if(mail.editor_status == "off"){
-    mail.editor.hide(); 
-  }
-  else if (mail.editor_status =="on"){
-    mail.editor.show();
+  //only show text box if mail app is on top. 
+  //Switch method to appInstack(mail) to show text box when mail app is opened at all.
+  if (windowStack.getTopApp() == mail){
+	  mail.editor.show();
+  } else {
+	  mail.editor.hide();
   }
 
-  
-
-    
-  //misc 
-  desktop.update()
+  //draw mouse
   drawMouse()
 }
 
@@ -79,7 +78,7 @@ class WindowStack{
 		var newstack = [];
 		for (var i = 0; i < this.stack.length;i++) {
 			if (this.stack[i] != app){
-				newstack.push(this.stack[i])
+				newstack.push(this.stack[i]);
 			}
 		}
 		this.stack = newstack;
@@ -88,7 +87,7 @@ class WindowStack{
 		//Draws windows for all apps currently in the stack
 		//most-recently-pushed is drawn last, so it will be on top
 		for (var i = 0; i < this.stack.length;i++) {
-			this.stack[i].drawWindow()
+			this.stack[i].drawWindow();
 		}
 	}
 	whichWindowClicked(){
@@ -98,11 +97,23 @@ class WindowStack{
 		for (var i = 0; i < this.stack.length;i++) {
 			var nextApp = this.stack[this.stack.length - (i+1)];
 			if (nextApp.Windowclick()){
-				return (nextApp)
+				return (nextApp);
 			}
 		}
 		return null;
 	}
+	getTopApp () {
+		return this.stack[this.stack.length -1];
+	}
+	appInStack(app){
+		for (var i = 0; i < this.stack.length;i++) {
+			if (this.stack[i] == app){
+				return (true);
+			}
+		}
+		return(false);
+	}
+	
 }
 
 class Desktop{
@@ -114,7 +125,7 @@ class Desktop{
   }
 
   drawToolbar(){
-	let tb_height = 50
+	let tb_height = 80
 	let tb_color = color('#25A976')//Choose color for toolbar
 	fill(tb_color)
     rect(0,windowHeight-tb_height,windowWidth-1,tb_height-1);
@@ -160,14 +171,15 @@ class Application{
     this.win_x = win_x;
     this.win_y = win_y;
     this.drag = false; //dragging flag
+	this.iconsize = 70;
   }
 
   drawIcon() {
-	image(this.icon, this.x, this.y, this.icon.width/7, this.icon.height/7 );
+	image(this.icon, this.x-(this.iconsize/2), this.y-(this.iconsize/2), this.iconsize, this.iconsize );
   }
 	
   drawWindow() { //just some placeholder draws to test out blank windows
-  
+	
 	//variables to change window appearance
 	var font = 'arial';
 	var strokecolor = 50;
@@ -187,9 +199,9 @@ class Application{
 	this.win.strokeWeight(2);
 	this.win.rect(5,5,(this.w - 10),30);
 		
-	this.win.strokeWeight(1.2);
-	this.win.fill(255);
-	this.win.textSize(20);
+	this.win.strokeWeight(0);
+	this.win.fill(0);
+	this.win.textSize(25);
 	this.win.textAlign(LEFT);
 	this.win.text(apptitle,10,29);
 		
@@ -197,6 +209,7 @@ class Application{
 	this.win.strokeWeight(2);
 	this.win.fill('lightcoral');
 	this.win.rect(this.w-35,5,30,30);
+	//this.win.
 
     //draws the window  
 	image(this.win,this.win_x,this.win_y,this.w,this.h);
@@ -228,10 +241,10 @@ class Application{
   
   Iconclick() {
 	////Checks to see if the desktop icon is being clicked
-	if (mouseX > (this.x) &&
-		mouseX < (this.x + this.icon.width/7) &&
-		mouseY > (this.y) &&
-		mouseY < (this.y + this.icon.height/7)){
+	if (mouseX > (this.x-(this.iconsize/2)) &&
+		mouseX < (this.x-(this.iconsize/2) + this.iconsize) &&
+		mouseY > (this.y-(this.iconsize/2)) &&
+		mouseY < (this.y-(this.iconsize/2) + this.iconsize)){
 			return true;
 	}
 	return false;
@@ -256,13 +269,7 @@ class Bank extends Application{
 		this.balance = this.balance + amount
 	} 
 	
-	drawIcon() {
-		//draws the icon on the desktop]
-		image(this.icon, this.x, this.y, this.icon.width/7, this.icon.height/7 );
-	}
-	
 	drawWindow() {
-		
 		//variables to change window appearance
 		var font_word = 'arial';
 		var font_num = 'monospace';
@@ -284,8 +291,8 @@ class Bank extends Application{
 		this.win.strokeWeight(2);
 		this.win.rect(5,5,(this.w - 10),30);
 		
-		this.win.strokeWeight(1.2);
-		this.win.fill(255);
+		this.win.strokeWeight(0);
+		this.win.fill(0);
 		this.win.textSize(20);
 		this.win.textAlign(LEFT);
 		this.win.text(apptitle,10,29);
@@ -362,7 +369,6 @@ class Bank extends Application{
 		image(this.win,this.win_x,this.win_y,this.w,this.h);
 	}
 }
-//
 
 class Mail extends Application {
 // the text editor 
@@ -372,7 +378,6 @@ class Mail extends Application {
         this.editor_y = this.win_y+50;
         this.editor_w = this.w/2; 
         this.editor_h = this.h-100;
-        this.editor_status = "off";
         this.editor = createElement('textarea');
         this.editor.position(this.editor_x,this.editor_y);
         this.editor.size(this.w/2, this.h-100);
@@ -380,13 +385,16 @@ class Mail extends Application {
 	}
     
     editorNotClicked(){
+		if (windowStack.getTopApp() != mail){
+			return true;
+		}
+		//Needs Fixing
         if ( //checks if the editor is clicked return FALSE
-             ((mouseX <= this.editor_x + this.editor_w)
-             && (mouseX >= this.editor_x)) 
+             (mouseX <= this.editor_x + this.editor_w)
+             && (mouseX >= this.editor_x)
              && (mouseY >= this.editor_y)
              && (mouseY <= this.editor_y + this.editor_h)){
-
-            console.log("text editor is clciked")
+            console.log("text editor is clicked")
 		        return false;
     }
     return true;
@@ -426,8 +434,8 @@ class Note extends Application{
 	this.win.strokeWeight(2);
 	this.win.rect(5,5,(this.w - 10),30);
 		
-	this.win.strokeWeight(4);
-	this.win.fill(255);
+	this.win.strokeWeight(0);
+	this.win.fill(0);
 	this.win.textSize(20);
 	this.win.textAlign(LEFT);
 	this.win.text(apptitle,10,29);
@@ -467,12 +475,8 @@ function mousePressed (){
 	//check to see if the close button was clicked
 	console.log('Clicked:',windowClicked.constructor.name)
 	  if (windowClicked.Closeclick()){
-      //hide text
-      if(windowClicked.constructor.name == "Mail"){
-          mail.editor_status ="off";
-      }
-		  console.log('Closed')
-		  windowStack.remove(windowClicked);
+		console.log('Closed')
+		windowStack.remove(windowClicked);
 
 	// if any other area clicked
 	  }else{
@@ -489,15 +493,15 @@ function mousePressed (){
 
   }else{//If NO window is clicked
 	//Check to see if any icons are being pressed
-	if (mail.Iconclick()&&mail.editor_status=="off"){
+	if (mail.Iconclick()){
 		console.log('Clicked: Mail Icon');
 		windowStack.push(mail);
-    mail.editor_status="on";
-
-
 	} else if (bank.Iconclick()){
 		console.log('Clicked: Bank Icon')
 		windowStack.push(bank)
+	} else if (note.Iconclick()){
+		console.log('Clicked: Note Icon')
+		windowStack.push(note)
 	}
   }
 }
@@ -519,25 +523,4 @@ function mouseReleased(){
   for (var i = 0; i < windowStack.stack.length; i++){
 	windowStack.stack[i].drag = false;
 	 }
-}
-
-//P5 event function
-function doubleClicked(){
-  //console.log("mail icon (w,h):", mail.icon.width, mail.icon.height);
-
-  //console.log(mail.x, mail.y);
-
-
-  //if mail app got double clicked 
-  if ( 
-     (mouseX <= (mail.x + mail.icon.width/7)
-     && mouseX >= mail.x) 
-     && (mouseY >= mail.y 
-     && (mouseY <= mail.y +mail.icon.height/7))){
-
-      // code here
-      //console.log("Im currently clicking the interent explore icon");
-      
-  }
- 
 }
