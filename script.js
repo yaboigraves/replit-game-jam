@@ -11,6 +11,8 @@ var bg;
 
 var desktopSprite;
 
+var timer;
+var started;
 
 
 //font 
@@ -25,10 +27,14 @@ function preload(){
   ourFont = loadFont("FreePixel.ttf");
 }
 
-
 function setup(){
+	
+  //create timer
+  started = false;
+  timer = new Timer();
+  
   loopAmbience();
-  cnv = createCanvas(windowWidth,windowHeight)
+  cnv = createCanvas(windowWidth,windowHeight);
   desktop = new Desktop();
 
   //mail application (x,y,"pic file name",width,height,window_x,window_y)
@@ -50,12 +56,13 @@ function draw(){
   background(100)
   image(desktopSprite,0,0,windowWidth,windowHeight)
   
-  //draw toolbar
-//  desktop.update()
   //draw icons
   bank.drawIcon();
   mail.drawIcon();
   note.drawIcon();
+  
+  //draw timer
+  timer.drawTimer();
   
   //draw windows
   windowStack.drawWindows();
@@ -162,6 +169,58 @@ function drawMouse(){
     }
 }
 
+class Timer{
+	//class for timer
+	constructor() {
+		this.hours = 9;
+		this.minutes = 0;
+		this.interval = null;
+	}
+	
+	start() {
+		if (this.interval == null){
+			this.interval = setInterval(timerUpdate,1000);
+		}
+	}
+	
+	pass_sec(){
+		if ((this.minutes == 59) && (this.hours == 4)){
+			null
+		}
+		this.minutes = this.minutes + 1;
+		if (this.minutes >= 60){
+			this.minutes = 0;
+			this.hours = this.hours + 1;
+			if (this.hours >= 13){
+				this.hours = 1;
+			}
+		}
+	}
+	
+	genString() {
+		var smin = String(this.minutes);
+		var shour = String(this.hours);
+		if (smin.length == 1){
+			return shour+':0'+smin
+		}
+		return shour+':'+smin
+	}
+	
+	drawTimer () {
+		push();
+		textFont(ourFont);
+		textSize(20);
+		textAlign(RIGHT);
+		fill(0);
+		text(this.genString(),windowWidth-15,windowHeight-15)
+		pop();
+	}
+}
+
+function timerUpdate() {
+	timer.pass_sec()
+}
+
 class Application{
   //object for applications, including their runtime logic and their file icons that reside on the desktop
 
@@ -196,7 +255,7 @@ class Application{
   drawWindow() { //just some placeholder draws to test out blank windows
 	
 	//variables to change window appearance
-	var font = 'arial';
+	var font = ourFont;
 	var strokecolor = 50;
 	var bgcolor = 'grey';
 	var apptitle = 'Mail';
@@ -333,8 +392,8 @@ class Bank extends Application{
 	
 	drawWindow() {
 		//variables to change window appearance
-		var font_word = 'arial';
-		var font_num = 'monospace';
+		var font_word = ourFont;
+		var font_num = ourFont;
 		var strokecolor = 50;
 		var bgcolor = 'CornflowerBlue';
 		var bgcolor_table = 200;
@@ -409,7 +468,7 @@ class Bank extends Application{
 		this.win.strokeWeight(0);
 		
 		//Display list of recent transfers
-		for (var i=0; i < 4;i++){
+		for (var i=0; i < 5;i++){
 			if (this.senders.length > i) {
 				this.win.fill(0);
 				this.win.textAlign(LEFT);
@@ -504,8 +563,8 @@ class Note extends Application{
 	drawWindow() { //just some placeholder draws to test out blank windows
   
 	//variables to change window appearance
-	var font = 'arial';
-	var font_notes = 'cursive';
+	var font = ourFont;
+	var font_notes = ourFont;
 	var strokecolor = 50;
 	var bgcolor = 'khaki';
 	var apptitle = 'Notes';
@@ -546,9 +605,44 @@ class Note extends Application{
 	this.win.textFont(font_notes)
 	this.win.textAlign(LEFT);
 	this.win.textSize(textsize_notes);
-	this.win.text(this.message,20,50,(this.w - 20),(this.h-55));
+	this.win.text(this.message,20,50,(this.w - 20),(this.h-110));
+	
+	//Start button section
+	this.win.strokeWeight(2);
+	this.win.fill(bgcolor);
+	this.win.rect(5,this.h-150,(this.w - 10),(this.h-355));
+	
+	//actual start button
+	push();
+	if (started == false){
+		this.win.fill('limegreen');
+	} else{
+		this.win.fill(100);
+	}
+	this.win.strokeWeight(1);
+	this.win.rect(25,this.h-125,this.w-50,95);
+	
+	this.win.strokeWeight(0);
+	this.win.textAlign(CENTER);
+	this.win.textSize(40);
+	this.win.fill(0);
+
+	this.win.text('START WORK DAY',this.w/2,this.h-70);
+	pop();
+	
 		
 	image(this.win,this.win_x,this.win_y,this.w,this.h);
+	}
+	
+ 	startClick() {
+		if ((mouseX>this.win_x + 25)&&
+			(mouseX<this.win_x + this.w-50)&&
+			(mouseY>this.win_y + this.h-125)&&
+			(mouseY<this.win_y + this.h-30)&&
+			(started == false)){
+				started = true;
+				timer.start()
+		}
 	}
 	
 }
@@ -560,12 +654,14 @@ function mousePressed (){
     
   var windowClicked = windowStack.whichWindowClicked();
   //Make sure some window is being returned
-    console.log(windowClicked);
+    //console.log(windowClicked);
 
   if (windowClicked != null){
 	//check to see if the close button was clicked
 	console.log('Clicked:',windowClicked.constructor.name)
-      
+      if (windowClicked == note){
+		  windowClicked.startClick()
+	  }
       if((windowClicked == Mail) && mail.buttonClicked()){
           
              
