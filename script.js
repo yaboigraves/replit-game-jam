@@ -19,9 +19,9 @@ function setup(){
   desktop = new Desktop();
 
   //mail application (x,y,"pic file name",width,height,window_x,window_y)
-  mail = new Mail(windowWidth/2,windowHeight-40,"email.png",500,500,0,0);
-  
+  mail = new Mail(windowWidth/2,windowHeight-40,"email.png",1100,500,0,0);
   bank = new Bank(windowWidth/4,windowHeight-40,"bank.png",350,400,0,0);
+  mail.createButtons();
   bank.transfer('hiimdad@hotmail.com',100);//Test out a single transfer call, will remove later
   
   note = new Note(windowWidth/(4/3),windowHeight-40,"notes.png",400,500,0,0);
@@ -47,8 +47,8 @@ function draw(){
   //draw windows
   windowStack.drawWindows();
 
-  // this line is used to update the position of the editor 
-  mail.editor.position(mail.win_x+200, mail.win_y+50); 
+  // this line is used to update the position of the editor by redrawing it according to mail's app window x & y position
+  mail.editor.position(mail.win_x+350, mail.win_y+50); 
 
   //only show text box if mail app is on top. 
   //Switch method to appInstack(mail) to show text box when mail app is opened at all.
@@ -209,10 +209,57 @@ class Application{
 	this.win.strokeWeight(2);
 	this.win.fill('lightcoral');
 	this.win.rect(this.w-35,5,30,30);
-	//this.win.
 
-    //draws the window  
+    //draws the window 
 	image(this.win,this.win_x,this.win_y,this.w,this.h);
+  
+    //draws email button area in mail application
+    fill(255);
+    rect(this.win_x+25,this.win_y+50,this.button_area["w"], this.button_area["h"], 20);
+
+    //draws email buttons in mail application
+    var button_position = {"x":this.win_x+35 , "y":this.win_y+60}; // this line is used to reset position var
+    
+    //loop thru all element in buttons array. The amount of button will depend of the emails we give it 
+    this.buttons.forEach(element=>{
+      
+    if (element["status"] == "on" ){
+        
+        //button rect
+        fill(200);
+        strokeWeight(3);
+        stroke('#7395AE'); 
+        rect(button_position["x"], button_position["y"], this.button_area["w"]-20, this.button_area["h"]/5, 20);
+
+        
+        //button text
+        fill(0);    
+        strokeWeight(1);
+        textSize(14);    
+        text(element["email"], button_position["x"]+40, button_position["y"]+40, this.button_area["w"]-10, 30);
+        
+    }  
+    else{
+         
+        fill(200);
+        strokeWeight(2);
+        stroke(0); 
+        rect(button_position["x"], button_position["y"], this.button_area["w"]-20, this.button_area["h"]/5, 20);
+
+
+        fill(0);    
+        stroke(15);        
+        strokeWeight(1);
+        textSize(14);    
+        text(element["email"], button_position["x"]+40, button_position["y"]+40, this.button_area["w"]-10, 30);
+    }
+      
+      
+    // update next button's position  
+    button_position["y"] += this.button_area["h"]/5+10;
+      
+    });
+
   }
 
   Windowclick() {
@@ -374,14 +421,32 @@ class Mail extends Application {
 // the text editor 
     constructor(x,y,pic,w,h,win_x, win_y){
 		super(x,y,pic,w,h,win_x, win_y);
-        this.editor_x = this.win_x+200;
+        this.editor_x = this.win_x+350;
         this.editor_y = this.win_y+50;
-        this.editor_w = this.w/2; 
-        this.editor_h = this.h-80;
+        this.editor_w = 700; 
+        this.editor_h = 400;
         this.editor = createElement('textarea');
-        this.editor.position(this.editor_x,this.editor_y); //inital position
+        this.editor.position(this.editor_x,this.editor_y); //init. position
         this.editor.size(this.editor_w, this.editor_h); 
         this.editor.attribute("maxlength","1400");
+
+        /* the buttons attribute will be a list of dicitionaries. 
+          Each button will have the following attributes:
+          - clicked states
+          - email name
+          - actual text associated to that email 
+         */
+        
+        this.buttons = [];  
+        this.button_area = {
+          "w":300,
+          "h":400
+        };
+
+        //a list to store all victim emails for the day
+        this.contacts=["swagmaster212@hotmales.com","totallyyourgrandma@gmail.com"] ;
+
+        
 	}
     
     editorNotClicked(){
@@ -389,17 +454,27 @@ class Mail extends Application {
 			return true;
 		}
 		//fixed
-        if ( //checks if the editor is clicked return FALSE
-             (mouseX <= ((this.win_x+200) + this.editor_w)
-             && (mouseX >= this.editor_x))
-             && ((mouseY >= this.editor_y)
+        if ( //checks if the editor is clicked return FALSE ()
+             ((mouseX <= (this.win_x+350) + this.editor_w)
+             && (mouseX >= this.win_x+350))
+             && ((mouseY >= this.win_y+50)
              && (mouseY <= (this.win_y+50) + this.editor_h))){
             console.log("text editor is clicked")
 		        return false;
     }
     return true;
   }
-    
+    createButtons(){
+      for (var i =0; i<this.contacts.length; i++){
+        this.buttons.push({"state":"off", "email":this.contacts[i]}); 
+      }
+    console.log(this.buttons);
+    }
+
+    buttonclick(){
+        
+        
+    }
     
 }
 
@@ -470,25 +545,36 @@ function mousePressed (){
     
   var windowClicked = windowStack.whichWindowClicked();
   //Make sure some window is being returned
+    console.log(windowClicked);
 
   if (windowClicked != null){
 	//check to see if the close button was clicked
 	console.log('Clicked:',windowClicked.constructor.name)
+      
+      if((windowClicked == Mail) && mail.buttonClicked()){
+          
+             
+        }
+      
+      
 	  if (windowClicked.Closeclick()){
 		console.log('Closed')
 		windowStack.remove(windowClicked);
+          
+        
 
 	// if any other area clicked
 	  }else{
-      if (mail.editorNotClicked()){
-        windowStack.push(windowClicked);
-        windowClicked.drag = true;
-        x_offset = windowClicked.win_x - mouseX;
-        y_offset = windowClicked.win_y - mouseY;
-      }
-      else{
-        windowClicked.drag = false;
-      }
+          
+          if (mail.editorNotClicked()){
+            windowStack.push(windowClicked);
+            windowClicked.drag = true;
+            x_offset = windowClicked.win_x - mouseX;
+            y_offset = windowClicked.win_y - mouseY;
+          }
+          else{
+            windowClicked.drag = false;
+          }
 	  } 
 
   }else{//If NO window is clicked
