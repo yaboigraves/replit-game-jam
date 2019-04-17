@@ -7,8 +7,6 @@ var note;
 
 //images
 var bg;
-
-
 var desktopSprite;
 
 var mailIcon;
@@ -71,9 +69,12 @@ function setup(){
   note = new Note(windowWidth/(4/3),windowHeight-11,"notepadIcon.png",400,500,0,0);
 
   windowStack = new WindowStack();//Create the windowStack
+<<<<<<< HEAD
+=======
   
   report = new Report(0,0,'notes.png',500,700,0,0);
 
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
   //start game with note app open
   windowStack.push(note);
 }
@@ -95,19 +96,32 @@ function draw(){
   
   //draw windows
   windowStack.drawWindows();
-
   // this line is used to update the position of the editor by redrawing it according to mail's app window x & y position
+<<<<<<< HEAD
+  for (var i =0; i < mail.buttons.length; i++){
+    mail.buttons[i]["text"].position(mail.win_x+350, mail.win_y+50); 
+    if ((windowStack.getTopApp() == mail) && mail.buttons[i]["state"]=="on"){
+	  mail.buttons[i]["text"].show();
+    }
+    else if ((windowStack.getTopApp() != mail) || mail.buttons[i]["state"]=="off") {
+	  mail.buttons[i]["text"].hide();
+    }
+
+  }
+    
+    
+    
+  //only show text box if mail app is on top. 
+=======
   mail.editor.position(mail.win_x+350, mail.win_y+50);
 
   //only show text box if mail app is on top.
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
   //Switch method to appInstack(mail) to show text box when mail app is opened at all.
-  if (windowStack.getTopApp() == mail){
-	  mail.editor.show();
-  } else {
-	  mail.editor.hide();
-  }
+    
+    
 
-  //draw mouse
+//  //draw mouse
   drawMouse()
 }
 
@@ -273,13 +287,23 @@ class Application{
   drawWindow() { //just some placeholder draws to test out blank windows
 	push();
 	//variables to change window appearance
+<<<<<<< HEAD
+	var ourFont = 'arial';
+=======
 	var font = ourFont;
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
 	var strokecolor = 50;
 	var bgcolor = '#bfb8bf';
 	var apptitle = 'Mail';
+<<<<<<< HEAD
+		
+	this.win.textFont(ourFont)
+		
+=======
 
 	this.win.textFont(font)
 
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
 	//Background and Outline Rect (DRAW FIRST)
 	this.win.stroke(strokecolor);
 	this.win.strokeWeight(1);
@@ -305,6 +329,69 @@ class Application{
 
     //draws the window
 	image(this.win,this.win_x,this.win_y,this.w,this.h);
+<<<<<<< HEAD
+      
+    //draw send btn
+    fill(150);
+    rect(this.win_x+this.send_btn_position["x"], this.win_y+ this.send_btn_position["y"], 80,23); 
+    fill(0);
+    text("Send",this.win_x+this.send_btn_position["x"]+22, this.win_y+this.send_btn_position["y"]+5,70,23);  
+    
+    //draws clear btn
+    fill(150);
+    rect(this.win_x+this.clear_btn_position["x"], this.win_y+this.clear_btn_position["y"], 80,23); 
+    fill(0);
+    text("Clear",this.win_x+this.clear_btn_position["x"]+22,this.win_y+this.clear_btn_position["y"]+5,70,23);
+  
+      
+      
+      
+    //draws email button area in mail application      
+    fill(255);
+    rect(this.win_x+25,this.win_y+50,this.button_area["w"], this.button_area["h"]);
+      
+    //button_position update var
+    var button_position = {"x":this.win_x+35 , "y":this.win_y+60}; // this line is used to reset position var
+      
+    //loop thru all element in buttons array. The amount of button will depend of the emails we give it 
+    this.buttons.forEach(element=>{
+      
+        if (element["state"] == "on" ){
+            // if button is on, we'll fill a diff color 
+            //button rect
+            fill(200);
+            strokeWeight(3);
+            stroke('#7395AE'); 
+            rect(button_position["x"], button_position["y"], this.button_area["w"]-20, 39); // offset is 20 pixel for width & 20 for height 
+
+
+            //button text
+            fill(0);    
+            strokeWeight(1);
+            textSize(14);    
+            text(element["email"], button_position["x"]+40, button_position["y"]+15, this.button_area["w"]-10, 30);
+
+        }  
+        else{
+
+            fill(200);
+            strokeWeight(2);
+            stroke(0); 
+            rect(button_position["x"], button_position["y"], this.button_area["w"]-20, 39);
+
+
+            fill(0);    
+            stroke(15);        
+            strokeWeight(1);
+            textSize(14);    
+            text(element["email"], button_position["x"]+40, button_position["y"]+15, this.button_area["w"]-10, 30);
+        } 
+    // update next button's position  
+    button_position["y"] += 39+10;
+  });
+      
+  
+=======
 
     //draws email button area in mail application
     fill("#a39ca3");
@@ -350,6 +437,7 @@ class Application{
 
     // update next button's position
     button_position["y"] += this.button_area["h"]/5+10;
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
 
     });
 	pop();
@@ -416,10 +504,17 @@ class Bank extends Application{
 		var strokecolor = 50;
 		var bgcolor = 'CornflowerBlue';
 		var bgcolor_table = 200;
+<<<<<<< HEAD
+		var apptitle = 'United Bank Of Nigeria';
+		
+		this.win.textFont(ourFont)
+		
+=======
 		var apptitle = 'United Bank Of Zanderia';
 
 		this.win.textFont(ourFont)
 
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
 		//Background and Outline Rect (DRAW FIRST)
 		this.win.stroke(strokecolor);
 		this.win.strokeWeight(1);
@@ -460,7 +555,11 @@ class Bank extends Application{
 		this.win.textFont(ourFont);
 		this.win.text(String(this.balance)+' USD',this.w-10,110);
 		this.win.textFont(ourFont);
+<<<<<<< HEAD
+		
+=======
 
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
 		//Recent transfers
 		this.win.strokeWeight(2);
 		this.win.fill(bgcolor);
@@ -501,9 +600,9 @@ class Bank extends Application{
 					this.win.fill('FireBrick');
 					var amtStr = String(amt)+'.00';
 				}
-				this.win.textFont(font_num);
+				this.win.textFont(ourFont);
 				this.win.text(amtStr,this.w-10,190 + 50*i);
-				this.win.textFont(font_word);
+				this.win.textFont(ourFont);
 			}
 		}
 		image(this.win,this.win_x,this.win_y,this.w,this.h);
@@ -576,10 +675,19 @@ class Mail extends Application {
         this.editor_y = this.win_y+50;
         this.editor_w = 700;
         this.editor_h = 400;
+<<<<<<< HEAD
+//        this.editor = createElement('textarea');
+//        this.editor.id("editor");
+//        
+//        this.editor.position(this.editor_x,this.editor_y); //init. position
+//        this.editor.size(this.editor_w, this.editor_h); 
+//        this.editor.attribute("maxlength","1400");
+=======
         this.editor = createElement('textarea');
         this.editor.position(this.editor_x,this.editor_y); //init. position
         this.editor.size(this.editor_w, this.editor_h);
         this.editor.attribute("maxlength","1400");
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
 
         /* the buttons attribute will be a list of dicitionaries.
           Each button will have the following attributes:
@@ -591,15 +699,39 @@ class Mail extends Application {
         this.buttons = [];
         this.button_area = {
           "w":300,
-          "h":400
+          "h":405
         };
 
+<<<<<<< HEAD
+        /*a list to store all victim emails for the day
+        Cannot have more than 7 item, once it will     
+        */
+        this.contacts=["swagmaster212@hotmales.com","totallyyourgrandma@gmail.com","dsadsa","457","iop","dsa","fdsa","lol"] ;
+        
+        //send and clear buttons
+        this.send_btn_position = {
+            "x":950,
+            "y":465
+        };
+        
+        this.clear_btn_position ={
+            "x":850,
+            "y":465
+        }
+            
+        
+	}
+    
+
+    
+=======
         //a list to store all victim emails for the day
         this.contacts=["swagmaster212@hotmales.com","totallyyourgrandma@gmail.com"] ;
 
 
 	}
 
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
     editorNotClicked(){
 		if (windowStack.getTopApp() != mail){
 			return true;
@@ -615,18 +747,109 @@ class Mail extends Application {
     }
     return true;
   }
+    
+    createButton(email_address){
+        var textarea = createElement('textarea');
+        textarea.position(this.editor_x,this.editor_y); 
+        textarea.size(this.editor_w, this.editor_h);
+        textarea.attribute("maxlength","1400");
+        textarea.hide();
+        this.buttons.push( {"state":"off", "email":email_address, "text":textarea} ); 
+        
+    }
+    
+    
     createButtons(){
+<<<<<<< HEAD
+        for (var i =0; i<this.contacts.length; i++){
+//            this.buttons.push( {"state":"off", "email":this.contacts[i], "data":createElement('textarea')} ); 
+            this.createButton(this.contacts[i]);
+        }
+        console.log("All the buttons",this.buttons);        
+            
+    }
+    
+    //check if any of the button in the arr is pressed and set status flag 
+    buttonClicked(){
+        var button_position = {"x":this.win_x+35 , "y":this.win_y+60}; // inital position of the first button
+        for(var i=0 ; i<this.buttons.length; i++){
+            if((mouseX <= button_position["x"]+ this.button_area["w"]-20) && (mouseX >= button_position["x"])
+                && (mouseY <= button_position["y"] + 39) &&( mouseY >= button_position["y"])){
+                
+                console.log("button", i,"is clicked");
+                
+                if(this.buttons[i]["state"]=="off"){
+                    this.buttons[i]["state"] = "on";
+                }
+                else if(this.buttons[i]["state"] == "on"){
+                    this.buttons[i]["state"] = "off";
+                }    
+            }
+        button_position["y"] += 39+10; //update offset for the position of the next button   
+        }
+                
+=======
       for (var i =0; i<this.contacts.length; i++){
         this.buttons.push({"state":"off", "email":this.contacts[i]});
       }
     console.log(this.buttons);
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
     }
+    
+    //found out which btn has the "ON" state and return the information from the state 
+    getText(){
+//        var button_position = {"x":this.win_x+35 , "y":this.win_y+60}; // inital position of the first button
+        var data;
+        this.buttons.forEach(element=>{
+            if ((element["state"] == "on")&& (element["text"].value() != '')){              
+                 data = element["text"].value();
+                 element["text"].remove();
+                 var index = this.buttons.indexOf(element);
+                 this.buttons.splice(index, 1); // remove 1 item from that index
+                
+                 console.log("data",data);
+                 console.log(typeof(data));
+                 
+                }       
+        });
+        return data 
 
+<<<<<<< HEAD
+    }
+    
+    sendButtonClicked(){
+        if ((mouseX <= this.win_x + this.send_btn_position["x"] + 80 &&
+            mouseX >= this.win_x + this.send_btn_position["x"]) &&
+            (mouseY >= this.win_y +this.send_btn_position["y"]  &&
+            mouseY <=this.win_y +this.send_btn_position["y"]+23 ))
+            {
+            console.log("The SEND btn has been clicked")
+            return true;
+        }
+        return false;
+    }
+    
+    
+    
+    clearButtonClicked(){
+        if ((mouseX <= this.win_x + this.clear_btn_position["x"] + 80 &&
+            mouseX >= this.win_x + this.clear_btn_position["x"]) &&
+            (mouseY >= this.win_y +this.clear_btn_position["y"]  &&
+            mouseY <=this.win_y +this.clear_btn_position["y"]+23 ))
+            {
+            console.log("The CLEAR btn has been clicked")
+            return true;
+        }
+        return false;
+    }
+        
+=======
     buttonclick(){
 
 
     }
 
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
 }
 
 class Note extends Application{
@@ -646,9 +869,15 @@ class Note extends Application{
 	var bgcolor = 'khaki';
 	var apptitle = 'Notes';
 	var textsize_notes = 15;
+<<<<<<< HEAD
+		
+	this.win.textFont(ourFont)
+		
+=======
 
 	this.win.textFont(font)
 
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
 	//Background and Outline Rect (DRAW FIRST)
 	this.win.stroke(strokecolor);
 	this.win.strokeWeight(1);
@@ -679,7 +908,7 @@ class Note extends Application{
 	//Actual text
 	this.win.strokeWeight(0)
 	this.win.fill('black')
-	this.win.textFont(font_notes)
+	this.win.textFont(ourFont)
 	this.win.textAlign(LEFT);
 	this.win.textSize(textsize_notes);
 	this.win.text(this.message,20,50,(this.w - 20),(this.h-110));
@@ -735,12 +964,28 @@ function mousePressed (){
   if (windowClicked != null){
 	//check to see if the close button was clicked
 	console.log('Clicked:',windowClicked.constructor.name)
+<<<<<<< HEAD
+      
+      if(windowClicked == mail){
+        //
+          mail.buttonClicked(); 
+          if (mail.sendButtonClicked()){
+            console.log("inside send clicked");
+            var temp = mail.getText();
+            console.log("heres the return",temp);
+          }
+          else if( mail.clearButtonClicked()){
+              
+              
+          }
+=======
 	  if (windowClicked == note){
 		  windowClicked.startClick()
 	  }
       if((windowClicked == Mail) && mail.buttonClicked()){
 
 
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
         }
 
 
@@ -752,7 +997,10 @@ function mousePressed (){
 
 	// if any other area clicked
 	  }else{
+<<<<<<< HEAD
+=======
 
+>>>>>>> 374c2e526d365ab80b6f2d587d4037751447b242
           if (mail.editorNotClicked()){
             windowStack.push(windowClicked);
             windowClicked.drag = true;
