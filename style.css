@@ -1,6 +1,14 @@
 body::-webkit-scrollbar { display: none; }
 
-html, body {margin: 0; overflow: hidden;  }
+html, body {margin: 0; overflow: hidden; font-family: FreePixel;
 
 
 
+  }
+
+
+
+@font-face {
+  font-family: FreePixel;
+  src: url(FreePixel.ttf);
+}
