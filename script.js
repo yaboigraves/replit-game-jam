@@ -514,15 +514,21 @@ class Report extends Application {
 	constructor(x,y,pic,w,h,win_x, win_y){
 		super(x,y,pic,w,h,win_x, win_y)
 	}
+	
+	genReportString(){
+		return ('Testing Testing I love Testing');
+	}
+	
 	drawWindow() {
 		//variables to change window appearance
-		var font_word = ourFont;
-		var font_num = ourFont;
+		var font = ourFont;
 		var strokecolor = 50;
 		var bgcolor = 'wheat';
 		var apptitle = 'Daily Report';
+		var textsize_report = 15;
+		
 		push();
-		this.win.textFont(font_word)
+		this.win.textFont(font)
 		
 		//Background and Outline Rect (DRAW FIRST)
 		this.win.stroke(strokecolor);
@@ -545,6 +551,14 @@ class Report extends Application {
 		this.win.strokeWeight(2);
 		this.win.fill(bgcolor);
 		this.win.rect(5,40,(this.w - 10),(this.h-45));
+		
+		//Actual text
+		this.win.strokeWeight(0)
+		this.win.fill('black')
+		this.win.textFont(font)
+		this.win.textAlign(LEFT);
+		this.win.textSize(textsize_report);
+		this.win.text(this.genReportString(),20,50,(this.w - 20),(this.h-110));
 		
 		image(this.win,this.win_x,this.win_y,this.w,this.h);
 		pop();
