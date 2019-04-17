@@ -9,12 +9,25 @@ var note;
 var bg;
 
 
+var desktopSprite;
+
+
+
+//font 
+var ourFont;
+
 function preload(){
-  bg = loadImage("Nigerian-flag.jpg")
+  bg = loadImage("Nigerian-flag.jpg");
+  soundFormats('mp3', 'ogg','wav');
+  mySound = loadSound("mouseclicc.wav");
+  officeLoop = loadSound("officeLoop.mp3");
+  desktopSprite = loadImage("desktop.png");
+  ourFont = loadFont("FreePixel.ttf");
 }
 
 
 function setup(){
+  loopAmbience();
   cnv = createCanvas(windowWidth,windowHeight)
   desktop = new Desktop();
 
@@ -35,10 +48,10 @@ function setup(){
 function draw(){
   noCursor()
   background(100)
-  image(bg,0,0,windowWidth,windowHeight)
+  image(desktopSprite,0,0,windowWidth,windowHeight)
   
   //draw toolbar
-  desktop.update()
+//  desktop.update()
   //draw icons
   bank.drawIcon();
   mail.drawIcon();
@@ -130,10 +143,12 @@ class Desktop{
 	fill(tb_color)
     rect(0,windowHeight-tb_height,windowWidth-1,tb_height-1);
   }
-  update(){
-
-    this.drawToolbar()
-  }
+    
+    
+//  update(){
+//
+//    this.drawToolbar()
+//  }
 
 
 }
@@ -609,4 +624,14 @@ function mouseReleased(){
   for (var i = 0; i < windowStack.stack.length; i++){
 	windowStack.stack[i].drag = false;
 	 }
+}
+
+function loopAmbience(){
+  officeLoop.setVolume(.05)
+  officeLoop.loop()  
+}
+
+function mouseClicked() {
+  mySound.setVolume(0.1)
+  mySound.play()
 }
