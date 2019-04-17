@@ -13,6 +13,7 @@ var desktopSprite;
 
 var timer;
 var started;
+var finished;
 
 
 //font 
@@ -31,6 +32,7 @@ function setup(){
 	
   //create timer
   started = false;
+  finished = false;
   timer = new Timer();
   
   loopAmbience();
@@ -44,6 +46,8 @@ function setup(){
   bank.transfer('hiimdad@hotmail.com',100);//Test out a single transfer call, will remove later
   
   note = new Note(windowWidth/(4/3),windowHeight-40,"notes.png",400,500,0,0);
+  
+  report = new Report(0,0,'notes.png',500,700,0,0);
   
   windowStack = new WindowStack();//Create the windowStack
   
@@ -181,13 +185,16 @@ class Timer{
 	
 	start() {
 		if (this.interval == null){
-			this.interval = setInterval(timerUpdate,1000);
+			this.interval = setInterval(timerUpdate,10);
 		}
 	}
 	
 	pass_sec(){
-		if ((this.minutes == 0) && (this.hours == 5)){
+		if ((this.minutes == 59) && (this.hours == 4)){
 			console.log('TIMER UP!!!!!')
+			finished = true;
+			windowStack.push(report);
+			
 		}
 		this.minutes = this.minutes + 1;
 		if (this.minutes >= 60){
@@ -502,6 +509,50 @@ class Bank extends Application{
 	}
 }
 
+class Report extends Application {
+	constructor(x,y,pic,w,h,win_x, win_y){
+		super(x,y,pic,w,h,win_x, win_y)
+	}
+	drawWindow() {
+		//variables to change window appearance
+		var font_word = ourFont;
+		var font_num = ourFont;
+		var strokecolor = 50;
+		var bgcolor = 'wheat';
+		var apptitle = 'Daily Report';
+		push();
+		this.win.textFont(font_word)
+		
+		//Background and Outline Rect (DRAW FIRST)
+		this.win.stroke(strokecolor);
+		this.win.strokeWeight(1);
+		this.win.rectMode(CORNER);
+		this.win.fill(bgcolor);
+		this.win.rect(0,0,this.w-1,this.h-1);
+		
+		//Top Bar of Program
+		this.win.strokeWeight(2);
+		this.win.rect(5,5,(this.w - 10),30);
+		
+		this.win.strokeWeight(0);
+		this.win.fill(0);
+		this.win.textSize(20);
+		this.win.textAlign(LEFT);
+		this.win.text(apptitle,10,29);
+		
+		//text space rect
+		this.win.strokeWeight(2);
+		this.win.fill(bgcolor);
+		this.win.rect(5,40,(this.w - 10),(this.h-45));
+		
+		image(this.win,this.win_x,this.win_y,this.w,this.h);
+		pop();
+	}
+	Closeclick(){//can't close the report
+		return false
+	}
+}
+
 class Mail extends Application {
 // the text editor 
     constructor(x,y,pic,w,h,win_x, win_y){
@@ -657,6 +708,8 @@ class Note extends Application{
 	}
 	
 }
+
+
 
 
 //P5 event function
