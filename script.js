@@ -186,8 +186,8 @@ class Timer{
 	}
 	
 	pass_sec(){
-		if ((this.minutes == 59) && (this.hours == 4)){
-			null
+		if ((this.minutes == 0) && (this.hours == 5)){
+			console.log('TIMER UP!!!!!')
 		}
 		this.minutes = this.minutes + 1;
 		if (this.minutes >= 60){
@@ -197,15 +197,24 @@ class Timer{
 				this.hours = 1;
 			}
 		}
+		
+		if ((this.minutes > 0)&&(this.hours == 5)){
+			this.minutes = 0;
+			this.hours = 5;
+		}
 	}
 	
 	genString() {
 		var smin = String(this.minutes);
 		var shour = String(this.hours);
-		if (smin.length == 1){
-			return shour+':0'+smin
+		var ampm = ' AM';
+		if ((this.hours == 12)||(this.hours < 9)){
+			ampm = ' PM';
 		}
-		return shour+':'+smin
+		if (smin.length == 1){
+			return shour+':0'+smin+ampm
+		}
+		return shour+':'+smin+ampm
 	}
 	
 	drawTimer () {
@@ -261,7 +270,7 @@ class Application{
 	var strokecolor = 50;
 	var bgcolor = 'grey';
 	var apptitle = 'Mail';
-		
+	push();
 	this.win.textFont(font)
 		
 	//Background and Outline Rect (DRAW FIRST)
@@ -335,7 +344,7 @@ class Application{
     button_position["y"] += this.button_area["h"]/5+10;
       
     });
-
+	pop();
   }
 
   Windowclick() {
