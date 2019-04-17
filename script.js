@@ -4,17 +4,29 @@ var windowStack;
 var mail;
 var bank;
 var note;
-
+var desktopSprite;
 //images
 var bg;
 
 
+//font 
+var ourFont;
+
+
 function preload(){
   bg = loadImage("Nigerian-flag.jpg")
+  soundFormats('mp3', 'ogg','wav');
+  mySound = loadSound("mouseclicc.wav");
+  officeLoop = loadSound("officeLoop.mp3");
+  desktopSprite = loadImage("desktop.png")
+  ourFont = loadFont("FreePixel.ttf")
+
 }
 
 
 function setup(){
+  //textFont(ourFont);
+  loopAmbience();
   cnv = createCanvas(windowWidth,windowHeight)
   desktop = new Desktop();
 
@@ -32,10 +44,15 @@ function setup(){
   windowStack.push(note);
 }
 
+
+
 function draw(){
+  //image(desktopSprite,windowWidth/2,windowHeight/2,windowWidth,windowHeight)
+  
   noCursor()
   background(100)
-  image(bg,0,0,windowWidth,windowHeight)
+
+  image(desktopSprite,0,0,windowWidth,windowHeight)
   
   //draw toolbar
   desktop.update()
@@ -125,10 +142,10 @@ class Desktop{
   }
 
   drawToolbar(){
-	let tb_height = 80
-	let tb_color = color('#25A976')//Choose color for toolbar
-	fill(tb_color)
-    rect(0,windowHeight-tb_height,windowWidth-1,tb_height-1);
+	// let tb_height = 80
+	// let tb_color = color('#25A976')//Choose color for toolbar
+	// fill(tb_color)
+  //   rect(0,windowHeight-tb_height,windowWidth-1,tb_height-1);
   }
   update(){
 
@@ -186,7 +203,7 @@ class Application{
 	var bgcolor = 'grey';
 	var apptitle = 'Mail';
 		
-	this.win.textFont(font)
+	this.win.textFont(ourFont)
 		
 	//Background and Outline Rect (DRAW FIRST)
 	this.win.stroke(strokecolor);
@@ -270,6 +287,7 @@ class Bank extends Application{
 	} 
 	
 	drawWindow() {
+ 
 		//variables to change window appearance
 		var font_word = 'arial';
 		var font_num = 'monospace';
@@ -278,7 +296,7 @@ class Bank extends Application{
 		var bgcolor_table = 200;
 		var apptitle = 'United Bank Of Nigeria';
 		
-		this.win.textFont(font_word)
+		this.win.textFont(ourFont)
 		
 		//Background and Outline Rect (DRAW FIRST)
 		this.win.stroke(strokecolor);
@@ -317,9 +335,9 @@ class Bank extends Application{
 		this.win.fill('springgreen');
 		this.win.textSize(30);
 		this.win.textAlign(RIGHT);
-		this.win.textFont(font_num);
+		this.win.textFont(ourFont);
 		this.win.text(String(this.balance)+' USD',this.w-10,110);
-		this.win.textFont(font_word);
+		this.win.textFont(ourFont);
 		
 		//Recent transfers
 		this.win.strokeWeight(2);
@@ -361,9 +379,9 @@ class Bank extends Application{
 					this.win.fill('FireBrick');
 					var amtStr = String(amt)+'.00';
 				}
-				this.win.textFont(font_num);
+				this.win.textFont(ourFont);
 				this.win.text(amtStr,this.w-10,190 + 50*i);
-				this.win.textFont(font_word);
+				this.win.textFont(ourFont);
 			}
 		}	
 		image(this.win,this.win_x,this.win_y,this.w,this.h);
@@ -421,7 +439,7 @@ class Note extends Application{
 	var apptitle = 'Notes';
 	var textsize_notes = 15;
 		
-	this.win.textFont(font)
+	this.win.textFont(ourFont)
 		
 	//Background and Outline Rect (DRAW FIRST)
 	this.win.stroke(strokecolor);
@@ -453,7 +471,7 @@ class Note extends Application{
 	//Actual text
 	this.win.strokeWeight(0)
 	this.win.fill('black')
-	this.win.textFont(font_notes)
+	this.win.textFont(ourFont)
 	this.win.textAlign(LEFT);
 	this.win.textSize(textsize_notes);
 	this.win.text(this.message,20,50,(this.w - 20),(this.h-55));
@@ -523,4 +541,27 @@ function mouseReleased(){
   for (var i = 0; i < windowStack.stack.length; i++){
 	windowStack.stack[i].drag = false;
 	 }
+}
+
+
+
+
+
+
+
+
+//sound stuff 
+//plays the mouselick sound if you click anywhere on the scren
+function mouseClicked() {
+  mySound.setVolume(0.1)
+  mySound.play()
+}
+
+function loopAmbience(){
+  officeLoop.setVolume(.05)
+  officeLoop.loop()
+
+
+
+  
 }

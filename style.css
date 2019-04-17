@@ -1,8 +1,6 @@
 body::-webkit-scrollbar { display: none; }
 
-html, body {margin: 0; overflow: hidden}
+html, body {margin: 0; overflow: hidden;  }
 
-textarea{
-    resize: none;
-    overflow: hidden;
-}
+
+
