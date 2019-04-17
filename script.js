@@ -90,8 +90,10 @@ class WindowStack{
 	push(app){
 		//Removes other copies of an app from the stack, then pushes it to the top
 		//(used when opening an app or bringing it to the front)
+		if ((started == true) || (app == note)){
 		this.remove(app);
 		this.stack.push(app);
+		}
 	}
 	remove(app){
 		//Removes all instances of an app from the stack (used when closing apps)
@@ -676,7 +678,6 @@ function mousePressed (){
 
 	// if any other area clicked
 	  }else{
-          
           if (mail.editorNotClicked()){
             windowStack.push(windowClicked);
             windowClicked.drag = true;
