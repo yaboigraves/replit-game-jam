@@ -1,3 +1,12 @@
+//vars for parsing 
+
+
+s
+
+
+var emails = ["StevenEllison@Gmail.com","RAncheta@hotmail.com","Dukope@papersplea.se","PBWolf@gmail.com","michaelS@gmail.com","coryG@gmail.com","jKarbowiak@gmail.com","NraySingleton@hotmail.com","AColtrane@gmail.com","matt@lfhh.com","theredhead242@gmail.com","BSimpson@gmail.com","swarvy@paxico.com","instablip@fuzzo.com","bigChungus@hotmail.com","totallyNotABot@gmail.com","hHefner@gmail.com","bObama@gmail.com","mtendreart@bfeeder.com","halfMeat@gmail.com","murphyMan@gmail.com","eSweatshirt@gmail.com","tDawg@tdawg.co","mitch@mitch.com","jorgi@papersplea.se","pleaseHelp@me.com","whatthefdidyoujust@saytome.com","bigManTyrone@gmail.com","jackieChen@gmail.com","dakotaIsCool@gmail.com","htranica@gmail.com","shamana@shama.na","ideism@innerocean.com","sGorocia@gmail.com","gKitchen@grantKitchen.com","kojimaSan@kojimastudios.jp","rHuber@gmail.com","sammySlik@gmail.com","gConstanza@hotmail.com"]
+
+
 var cnv;
 
 var windowStack;
@@ -634,7 +643,7 @@ class Note extends Application{
 		super(x,y,pic,w,h,win_x, win_y)
 
 		//Note specifics
-		this.message = 'Note to self: need to make lots of money today! Make sure to write good e-mails to get those gullible Americans to send you their money! Use the e-mail app to write e-mails. Use the bank app to track how much you have made!';
+			this.message = "Hello new hire, here's a couple notes for you so you can get started for your first day. Remember, you MUST meet the quota today or you will be terminated \n \nTodays Quota : 50,000 USD                         1.Open the mail app to begin sending emails to silly American contacts. Be as creative as you can, and try to persuade them in the emails to route money to our bank account, the info is already attached with the email just come up with the best story you can.          \n2.Once you send the mail it will take a bit and then the stupid Americans should send you some money, you can keep track of what you've made today in your Banking application.\n3.The workday is from 9AM to 5PM, time flies when you're working hard though so meet your quota for the day if you want to get payed. Good luck!";
 	}
 
 	drawWindow() { //just some placeholder draws to test out blank windows
