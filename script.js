@@ -174,7 +174,7 @@ function setup(){
 
   windowStack = new WindowStack();//Create the windowStack
   
-  report = new Report(0,0,'notes.png',450,300,0,0);
+  report = new Report(0,0,'notepadIcon.png',450,300,0,0);
 
   //start game with note app open
   windowStack.push(note);
