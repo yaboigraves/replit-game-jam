@@ -59,9 +59,6 @@ var bonuswords = {
   'payback': 1,
   'zanderian': 1,
   'history': 1,
-  'fuck': 1,
-  'shit': 1,
-  'bitch': 1,
   'illegal': 1,
   'legal': 1,
   'property': 1,
@@ -77,7 +74,154 @@ var bonuswords = {
   'buisnessman':1,
   'mansion':1,
   'dough':1
+  
 };
+
+var bonuswords_grandma = {
+    'lord':1,
+    'grandson':1,
+    'knitting':1,
+    'baking':1,
+    'medical':1,
+    'insurance':1,
+    'grandkids':1,
+    'grandchild':1,
+    'accident':1,
+    'Western':1,
+    'Union':1,
+    'gift':1,
+    'birthday':1,
+    'wire':1,
+    'hey':1,
+    'mother':1,
+    'maiden':1,
+    'foreign':1,
+    'hospital':1,
+    'emergency':1,
+    'jail':1,
+    'help':1,
+    'police':1,
+    'custody':1,
+    'lawyer':1,
+    'officer':1,
+    'please':1,
+    'mom':1,
+    'dad':1,
+    'mother':1,
+    'baby':1,
+    'father':1,
+    'LifeCall':1,
+    'LifeAlert':1,
+    'fallen':1,
+    'up':1,
+    'overnight':1,
+    'pet':1,
+    'scared':1,
+    'love':1,
+    'cookies':1,
+    'peace':1,
+    'church':1,
+    'donation':1,
+    'charity':1,
+    'mortage':1,
+    'bail':1,
+    
+    'kidnap':1,
+    'kidnapping':1,
+    'kill':1,
+    
+    
+    'bank':1,
+    'bills':1,
+    'payment':1,
+    'due':1,
+    'fee':1,
+    'power':1,
+    'pgne':1,
+    'pg&e':1,
+    'overdue':1,
+    'late':1,
+    'quickly':1,
+    'urgent':1,
+    'wire':1,
+    'check':1,
+    'checks':1,
+    'cash':1,
+    
+    
+    
+    
+}
+
+var bonuswords_gamers ={
+    'vbucks':1,
+    'gems':1,
+    'Fornite':1,
+    'banned':1,
+    'ban':1,
+    'suspend':1,
+    'suspension':1,
+    'bitcoin':1,
+    'account':1,
+    'decline':1,
+    'declined':1,
+    'late':1,
+    'card':1,
+    'visa':1,
+    'master card':1,
+    'credit':1,
+    'debit':1,
+    'Amex':1,
+    'update':1,
+    'info':1,
+    'information':1,
+    'league':1,
+    'legends':1,
+    'overwatch':1,
+    'apex':1,
+    'curreny':1,
+    'virtual':1,
+    'mircotransaction':1,
+    'coins':1,
+    'password':1,
+    'activity':1,
+    'username':1,
+    'account':1,
+    'suspicious':1, 
+    'verfiy':1,
+    'paypal':1,
+    'venmo':1,
+    'epic':1,
+    'steam':1,
+    'hacks':1,
+    'hack':1,
+    'hackers':1,
+    'email':1,
+    
+    'bank':1,
+    'bills':1,
+    'payment':1,
+    'due':1,
+    'fee':1,
+    'power':1,
+    'pgne':1,
+    'pg&e':1,
+    'overdue':1,
+    'late':1,
+    'quickly':1,
+    'urgent':1,
+    'wire':1,
+    'check':1,
+    'checks':1,
+    'cash':1,
+    'winning':1,
+    'transaction':1,
+    
+    
+    
+    
+        
+}
 
 
 var files = [ 'n2.txt', 'n1.txt', 'n3.txt', 'n4.txt', 'n5.txt'];
@@ -121,6 +265,39 @@ function startButtonClicked(){
 
 }
 
+//Used to classifiy the emails into different categories depending on the name of the email address
+/* 
+The four categories are:
+- general
+- grandmas
+- kids/gamers
+- 
+
+*/
+function email_identifier(email_add) {
+    var id_lists = {
+        "grandma":['grandkids','mama','grandma','cookies','christ','lord'],
+        "gamer":['fornite','vbucks','420','Chungus','ninja','xxx_']
+        
+    } 
+    
+    // goes thru all the keywords in the id_list and return the category of a given email 
+    var name  = email_add.substring(0, email_add.lastIndexOf("@")); 
+    console.log(name);
+     for (category in id_lists){
+         console.log("heres the cat.:", category);
+         for (var i = 0; i <id_lists[category].length; i++){
+             console.log(id_lists[category][i]);
+             
+             // if the email name include the sub string in the id_list
+             if(name.includes(id_lists[category][i])){
+                 return category;
+             }  
+         }
+     } 
+    return "general" // if no other category is found return the generic one 
+}
+
 
 function preload(){
   soundFormats('mp3', 'ogg','wav');
@@ -147,7 +324,10 @@ function preload(){
 
 
 function setup(){
-	playStartupSound()
+  // testing the email identifier 
+  console.log(email_identifier('lordpeace12321@example.com'));
+    
+  playStartupSound();
   //create timer
   started = false;
   finished = false;
@@ -174,7 +354,7 @@ function setup(){
 
   windowStack = new WindowStack();//Create the windowStack
   
-  report = new Report(0,0,'notepadIcon.png',450,300,0,0);
+  report = new Report(0,0,'notes.png',450,300,0,0);
 
   //start game with note app open
   windowStack.push(note);
@@ -559,14 +739,16 @@ class Bank extends Application{
     var amtflr = Math.floor(amount);
 		//accepts a string for the address and a dollar amount
     if (finished == false){
-		this.senders.push(address);
+      this.senders.push(address);
 		this.transfers.push(amtflr);
 		this.balance = this.balance + amtflr;
-		if(amtflr > 0){
-			playChachingSound()
-		} else {
-			playBuzzSound()
-		}
+    if(amount > 0){
+      playChachingSound()
+    }
+    else{
+      playBuzzSound()
+    }
+    
     }
 	}
 
@@ -953,7 +1135,7 @@ class Note extends Application{
 	this.win.rectMode(CORNER);
 	this.win.fill(bgcolor);
 	this.win.rect(0,0,this.w-1,this.h-1);
-	
+
 	//Top Bar of Program
 	this.win.strokeWeight(2);
 	this.win.rect(5,5,(this.w - 10),30);
