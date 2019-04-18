@@ -354,7 +354,7 @@ function setup(){
 
   windowStack = new WindowStack();//Create the windowStack
   
-  report = new Report(0,0,'notes.png',450,300,0,0);
+  report = new Report(0,0,'notepadIcon.png',450,300,0,0);
 
   //start game with note app open
   windowStack.push(note);
@@ -733,26 +733,41 @@ class Bank extends Application{
 		this.balance = 0;//Bank Balance
 		this.senders = [];//Array of sender addresses
 		this.transfers = []; //array of transfer amounts
+		this.notif = 'none';
 	} 
 
 	transfer(address,amount) {
-    var amtflr = Math.floor(amount);
+      var amtflr = Math.floor(amount);
 		//accepts a string for the address and a dollar amount
-    if (finished == false){
-      this.senders.push(address);
+      if (finished == false){
+		this.senders.push(address);
 		this.transfers.push(amtflr);
 		this.balance = this.balance + amtflr;
-    if(amount > 0){
-      playChachingSound()
-    }
-    else{
-      playBuzzSound()
+      if(amtflr > 0){
+		playChachingSound()
+		this.notif = 'palegreen';
+      } else {
+		playBuzzSound()
+		this.notif = 'lightcoral';
     }
     
     }
 	}
+	
+	drawIcon(){
+		image(this.icon, this.x-(this.iconsize/2), this.y - 36, this.iconsize,42 );
+		if (this.notif != 'none'){
+			push();
+			fill(this.notif);
+			stroke(0);
+			strokeWeight(1);
+			circle(this.x-(this.iconsize/2), this.y - 36,10)
+			pop();
+		}
+	}
 
 	drawWindow() {
+		this.notif = 'none';
 		//variables to change window appearance
 		var font_word = ourFont;
 		var font_num = ourFont;
