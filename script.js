@@ -5,6 +5,8 @@ var counts = {};
 var keys = [];
 var allwords = [];
 
+var newwords = [];
+
 var bonuswords = {
   'rich': 1,
   'fortune': 1,
@@ -17,12 +19,71 @@ var bonuswords = {
   'crypto': 1,
   'wire': 1,
   'help': 1,
-  'assist': 1
+  'assist': 1,
+  'very': 1,
+  'extravagent': 1,
+  'credit': 1,
+  'grandson': 1,
+  'vbucks': 1,
+  'transfer': 1,
+  'need': 1,
+  'money': 1, 
+  'satoshi': 1,
+  'bogdanoff': 1,
+  'sminem': 1, 
+  'ethereum': 1,
+  'return': 1,
+  'zanderia': 1,
+  'prince': 1,
+  'king': 1,
+  'queen': 1,
+  'princess': 1,
+  'royal': 1,
+  'royalty': 1,
+  'coffers': 1,
+  'vault': 1,
+  'hoard': 1,
+  'small': 1,
+  'payment': 1,
+  'treasury': 1,
+  'government': 1,
+  'finale': 1,
+  'crisis': 1,
+  'disease': 1,
+  'medicine': 1,
+  'insurance': 1,
+  'military': 1,
+  'might': 1,
+  'loan': 1,
+  'loans': 1,
+  'payback': 1,
+  'zanderian': 1,
+  'history': 1,
+  'fuck': 1,
+  'shit': 1,
+  'bitch': 1,
+  'illegal': 1,
+  'legal': 1,
+  'property': 1,
+  'estate': 1,
+  'bank': 1, 
+  'deposit': 1,
+  'sir':1,
+  'mam':1,
+  'madame':1,
+  'my lord':1,
+  'danger':1,
+  'wealthy':1,
+  'buisnessman':1,
+  'mansion':1,
+  'dough':1
 };
+
+
 var files = [ 'n2.txt', 'n1.txt', 'n3.txt', 'n4.txt', 'n5.txt'];
 
 
-var emails = ["StevenEllison@Gmail.com","RAncheta@hotmail.com","Dukope@papersplea.se","PBWolf@gmail.com","michaelS@gmail.com","coryG@gmail.com","jKarbowiak@gmail.com","NraySingleton@hotmail.com","AColtrane@gmail.com","matt@lfhh.com","theredhead242@gmail.com","BSimpson@gmail.com","swarvy@paxico.com","instablip@fuzzo.com","bigChungus@hotmail.com","totallyNotABot@gmail.com","hHefner@gmail.com","bObama@gmail.com","mtendreart@bfeeder.com","halfMeat@gmail.com","murphyMan@gmail.com","eSweatshirt@gmail.com","tDawg@tdawg.co","mitch@mitch.com","jorgi@papersplea.se","pleaseHelp@me.com","whatthefdidyoujust@saytome.com","bigManTyrone@gmail.com","jackieChen@gmail.com","dakotaIsCool@gmail.com","htranica@gmail.com","shamana@shama.na","ideism@innerocean.com","sGorocia@gmail.com","gKitchen@grantKitchen.com","kojimaSan@kojimastudios.jp","rHuber@gmail.com","sammySlik@gmail.com","gConstanza@hotmail.com"]
+var emails = ["StevenEllison@Gmail.com","RAncheta@hotmail.com","Dukope@papersplea.se","PBWolf@gmail.com","michaelS@gmail.com","coryG@gmail.com","jKarbowiak@gmail.com","NraySingleton@hotmail.com","AColtrane@gmail.com","matt@lfhh.com","theredhead242@gmail.com","BSimpson@gmail.com","swarvy@paxico.com","instablip@fuzzo.com","bigChungus@hotmail.com","totallyNotABot@gmail.com","hHefner@gmail.com","bObama@gmail.com","mtendreart@bfeeder.com","halfMeat@gmail.com","murphyMan@gmail.com","eSweatshirt@gmail.com","tDawg@tdawg.co","mitch@mitch.com","jorgi@papersplea.se","pleaseHelp@me.com","bigManTyrone@gmail.com","jackieChen@gmail.com","dakotaIsCool@gmail.com","htranica@gmail.com","shamana@shama.na","ideism@innerocean.com","sGorocia@gmail.com","gKitchen@grantKitchen.com","kojimaSan@kojimastudios.jp","rHuber@gmail.com","sammySlik@gmail.com","gConstanza@hotmail.com"]
 
 
 var cnv;
@@ -65,10 +126,15 @@ function preload(){
   soundFormats('mp3', 'ogg','wav');
   mySound = loadSound("mouseclicc.wav");
   officeLoop = loadSound("officeLoop.mp3");
+  endOfDay = loadSound("endOfDay.mp3")
   desktopSprite = loadImage("desktop.png");
   ourFont = loadFont("FreePixel.ttf");
   mailIcon = loadImage("mailIcon.png")
   //xIcon = loadImage("xIcon.png")
+  startupSound = loadSound("startupSound.wav")
+  chaching = loadSound("chaching.wav")
+  notificationSound = loadSound("notificationSound.wav")
+  buzz = loadSound("buzz.mp3")
   xIconGrey = loadImage("xIconGrey.png")
   xIconBlue = loadImage("xIconBlu.png")
   xIconYellow = loadImage("xIconYellow.png")
@@ -81,7 +147,7 @@ function preload(){
 
 
 function setup(){
-	
+	playStartupSound()
   //create timer
   started = false;
   finished = false;
@@ -102,7 +168,7 @@ function setup(){
   // mail.createButtons(); // create a array of  btn objects depending on the amount of items in the list  
 
 
-  //bank.transfer('hiimdad@hotmail.com',100);//Test out a single transfer call, will remove later
+  //bank.transfer('hiimdad@hotmail.com',2.5);//Test out a single transfer call, will remove later
 
   note = new Note(windowWidth/(4/3),windowHeight-11,"notepadIcon.png",400,500,0,0);
 
@@ -242,7 +308,7 @@ class Timer{
 	
 	pass_sec(){
 		if ((this.minutes == 59) && (this.hours == 4)){
-			console.log('TIMER UP!!!!!')
+			//.log('TIMER UP!!!!!')
 			finished = true;
 			windowStack.push(report);
 			
@@ -487,14 +553,22 @@ class Bank extends Application{
 		this.balance = 0;//Bank Balance
 		this.senders = [];//Array of sender addresses
 		this.transfers = []; //array of transfer amounts
-	}
+	} 
 
 	transfer(address,amount) {
+    var amtflr = Math.floor(amount);
 		//accepts a string for the address and a dollar amount
     if (finished == false){
-      this.senders.push(address)
-		this.transfers.push(amount)
-		this.balance = this.balance + amount
+      this.senders.push(address);
+		this.transfers.push(amtflr);
+		this.balance = this.balance + amtflr;
+    if(amount > 0){
+      playChachingSound()
+    }
+    else{
+      playBuzzSound()
+    }
+    
     }
 	}
 
@@ -602,7 +676,7 @@ class Bank extends Application{
 class Report extends Application {
 	constructor(x,y,pic,w,h,win_x, win_y){
 		super(x,y,pic,w,h,win_x, win_y)
-    this.threshold = 50000;
+    this.threshold = 420;
 	}
 	
 	genReportString(){
@@ -740,7 +814,7 @@ class Mail extends Application {
              && (mouseX >= this.win_x+350))
              && ((mouseY >= this.win_y+50)
              && (mouseY <= (this.win_y+50) + this.editor_h))){
-            console.log("text editor is clicked")
+            //.log("text editor is clicked")
 		        return false;
     }
     return true;
@@ -760,7 +834,7 @@ class Mail extends Application {
   //            this.buttons.push( {"state":"off", "email":this.contacts[i], "data":createElement('textarea')} ); 
               this.createButton(this.contacts[i]);
           }
-          console.log("All the buttons",this.buttons);
+          //.log("All the buttons",this.buttons);
             
       }
   //check if any of the button in the arr is pressed and set status flag 
@@ -770,7 +844,7 @@ class Mail extends Application {
               if((mouseX <= button_position["x"]+ this.button_area["w"]-20) && (mouseX >= button_position["x"])
                   && (mouseY <= button_position["y"] + 39) &&( mouseY >= button_position["y"])){
                   
-                  console.log("button", i,"is clicked");
+                  //.log("button", i,"is clicked");
                   
                   if(this.buttons[i]["state"]=="off"){
                       this.buttons[this.prev_btn_on]["state"] = "off";
@@ -801,8 +875,8 @@ class Mail extends Application {
                  var index = this.buttons.indexOf(element);
                  this.buttons.splice(index, 1); // remove 1 item from that index
                  this.contacts.splice(index,1);
-                 console.log("data",data);
-                 console.log(typeof(data));
+                //  console.log("data",data);
+                //  console.log(typeof(data));
                  
                 }       
         });
@@ -824,7 +898,7 @@ class Mail extends Application {
             (mouseY >= this.win_y +this.send_btn_position["y"]  &&
             mouseY <=this.win_y +this.send_btn_position["y"]+23 ))
             {
-            console.log("The SEND btn has been clicked")
+            //.log("The SEND btn has been clicked")
             return true;
         }
         return false;
@@ -836,7 +910,7 @@ class Mail extends Application {
             (mouseY >= this.win_y +this.clear_btn_position["y"]  &&
             mouseY <=this.win_y +this.clear_btn_position["y"]+23 ))
             {
-            console.log("The CLEAR btn has been clicked")
+            //.log("The CLEAR btn has been clicked")
             return true;
         }
         return false;
@@ -848,7 +922,7 @@ class Mail extends Application {
         index = Math.floor(index);
         this.contacts.push(emails[index]); 
         this.createButton(emails[index]);
-        console.log(emails[index]);
+        //.log(emails[index]);
       }
     }
 
@@ -860,7 +934,7 @@ class Note extends Application{
 		super(x,y,pic,w,h,win_x, win_y)
 
 		//Note specifics
-			this.message = "Hello new hire, here's a couple notes for you so you can get started for your first day. Remember, you MUST meet the quota today or you will be terminated \n \nTodays Quota : 50,000 USD                         1.Open the mail app to begin sending emails to silly American contacts. Be as creative as you can, and try to persuade them in the emails to route money to our bank account, the info is already attached with the email just come up with the best story you can.          \n2.Once you send the mail it will take a bit and then the stupid Americans should send you some money, you can keep track of what you've made today in your Banking application.\n3.The workday is from 9AM to 5PM, time flies when you're working hard though so meet your quota for the day if you want to get payed. Good luck!";
+			this.message = "Hello new hire, here's a couple notes for you so you can get started for your first day. Remember, you MUST meet the quota today or you will be terminated. Glory to Zanderia! \n \nTodays Quota : 420.00 USD                         1.Open the mail app to begin sending emails to silly foreigner contacts. Be as creative as you can, and try to persuade them in the emails to route money to our bank account, the info is already attached with the email just come up with the best story you can.          \n2.Once you send the mail it will take a bit and then the stupid foreigner should send you some money, you can keep track of what you've made today in your Banking application.\n3.The workday is from 9AM to 5PM, time flies when you're working hard though so meet your quota for the day if you want to get paid. Click the Start Work Day button when you're ready Officer. Good luck!";
 	}
 
 	drawWindow() { //just some placeholder draws to test out blank windows
@@ -955,7 +1029,7 @@ function mousePressed (){
 
   if (windowClicked != null){
 	//check to see if the close button was clicked
-	console.log('Clicked:',windowClicked.constructor.name)
+	//.log('Clicked:',windowClicked.constructor.name)
 	  if (windowClicked == note){
 		  windowClicked.startClick()
 	  }
@@ -982,7 +1056,7 @@ function mousePressed (){
 
 
 	  if (windowClicked.Closeclick()){
-		console.log('Closed')
+		//.log('Closed')
 		windowStack.remove(windowClicked);
 
 
@@ -1004,13 +1078,13 @@ function mousePressed (){
   }else{//If NO window is clicked
 	//Check to see if any icons are being pressed
 	if (mail.Iconclick()){
-		console.log('Clicked: Mail Icon');
+		//console.log('Clicked: Mail Icon');
 		windowStack.push(mail);
 	} else if (bank.Iconclick()){
-		console.log('Clicked: Bank Icon')
+		//console.log('Clicked: Bank Icon')
 		windowStack.push(bank)
 	} else if (note.Iconclick()){
-		console.log('Clicked: Note Icon')
+	//	console.log('Clicked: Note Icon')
 		windowStack.push(note)
 	} else {
     startmenu.click();
@@ -1056,20 +1130,51 @@ function analyzeLetter(letter) {
   
   var total = 0;
 
-  for(var i = 0; i < w.length; i++ ) {
-    if(w[i] in counts) {
-      var tfidf = counts[w[i]].tfidf;
-      if(tfidf > 0) {
-        var df = counts[w[i]].df
-        var ttotal = tfidf / df * 0.6;
-        total += ttotal;
-      }
-    } 
-  }
-  total += keyWordCheck(w);
+  // fillNewWords(w);
+  // if( similarity(w) >=50.0) {
+  //   return 0;
+  // } 
+  // else {
+    for(var i = 0; i < w.length; i++ ) {
+      if(w[i] in counts) {
+        var tfidf = counts[w[i]].tfidf;
+        if(tfidf > 0) {
+          var df = counts[w[i]].df
+          var ttotal = tfidf / df * 0.6;
+          total += ttotal;
+        }
+      } 
+    }
+    total += keyWordCheck(w);
 
-  return money_round(total);
+    return money_round(total);
+  // }
 }
+
+function similarity(letter) {
+  var percent;
+  var found = 0;
+
+  for(var i = 0; i < letter.length; i++) {
+    if(newwords.indexOf(letter[i]) != 1) {
+      found += 1;
+    }
+  }
+
+  percent = money_round(found / newwords.length * 100);
+  console.log(percent)
+
+  return percent;
+}
+
+function fillNewWords(letter) {
+  for(var i = 0; i < letter.length; i++) {
+    if(newwords.indexOf(letter[i]) == -1) {
+      newwords.push(letter[i]);
+    }
+  }
+}
+
 
 function keyWordCheck(w) {
   var total = 0;
@@ -1158,7 +1263,7 @@ function buildDict() {
   // Sorts by weight- high to low
   function compare(a, b) {
     var countA = counts[a].tfidf;
-    var countB = counts[b].tfidf;
+    var countB = coufnts[b].tfidf;
 
     return countB - countA;
   }
@@ -1168,4 +1273,27 @@ function buildDict() {
   //   var key = keys[i];
   //   console.log(key + " " + counts[key].tfidf);
   // }
+}
+//sound functions 
+function playStartupSound(){
+  startupSound.setVolume(0.1);
+  startupSound.play()
+}
+function playEndOfDaySound(){
+  endOfDay.setVolume(0.1)
+  endOfDay.play()
+}
+function playNotificationSound(){
+  notificationSound.setVolume(0.1)
+  notificationSound.play()
+}
+
+function playChachingSound(){
+  chaching.setVolume(0.1)
+  chaching.play()
+}
+
+function playBuzzSound(){
+  buzz.setVolume(0.1)
+  buzz.play()
 }

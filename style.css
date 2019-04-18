@@ -7,10 +7,6 @@ html, body {margin: 0; overflow: hidden; font-family: FreePixel;
   }
 
 
-textarea{
-    resize: none;
-    overflow: hidden;
-}
 
 @font-face {
   font-family: FreePixel;
