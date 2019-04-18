@@ -92,7 +92,10 @@ function setup(){
   //mail application (x,y,"pic file name",width,height,window_x,window_y)
   mail = new Mail(windowWidth/2,windowHeight-11,"mailIcon.png",1100,500,0,0);
   bank = new Bank(windowWidth/4,windowHeight-11,"bankingIcon.png",350,400,0,0);
-  mail.createButtons(); // create a array of  btn objects depending on the amount of items in the list  
+  mail.emailFill();
+  mail.buttons[0]["state"] = "on";
+  // mail.createButtons(); // create a array of  btn objects depending on the amount of items in the list  
+
 
   bank.transfer('hiimdad@hotmail.com',100);//Test out a single transfer call, will remove later
 
@@ -669,7 +672,7 @@ class Mail extends Application {
         };
 
         //a list to store all victim emails for the day
-        this.contacts=["swagmaster212@hotmales.com","totallyyourgrandma@gmail.com"] ;
+        this.contacts=[] ;
 
         this.send_btn_position = {
             "x":950,
@@ -681,8 +684,15 @@ class Mail extends Application {
             "y":465
         }
 
+        this.prev_btn_on = 0;
 
 	}
+
+    emailFill(){
+      for(var i=0 ; i<8; i++){
+        this.emailUpdate();
+      }
+    }
 
     editorNotClicked(){
 		if (windowStack.getTopApp() != mail){
@@ -714,7 +724,8 @@ class Mail extends Application {
   //            this.buttons.push( {"state":"off", "email":this.contacts[i], "data":createElement('textarea')} ); 
               this.createButton(this.contacts[i]);
           }
-          console.log("All the buttons",this.buttons);            
+          console.log("All the buttons",this.buttons);
+            
       }
   //check if any of the button in the arr is pressed and set status flag 
       buttonClicked(){
@@ -726,11 +737,17 @@ class Mail extends Application {
                   console.log("button", i,"is clicked");
                   
                   if(this.buttons[i]["state"]=="off"){
+                      this.buttons[this.prev_btn_on]["state"] = "off";
                       this.buttons[i]["state"] = "on";
+                      this.prev_btn_on = i;
+                      
                   }
-                  else if(this.buttons[i]["state"] == "on"){
-                      this.buttons[i]["state"] = "off";
-                  }    
+
+                  // else if(this.buttons[i]["state"] == "on"){
+                  //     this.buttons[i]["state"] = "off";
+
+
+                  // }    
               }
           button_position["y"] += 39+10; //update offset for the position of the next button   
           }
@@ -747,13 +764,22 @@ class Mail extends Application {
                  element["text"].remove();
                  var index = this.buttons.indexOf(element);
                  this.buttons.splice(index, 1); // remove 1 item from that index
-                
+                 this.contacts.splice(index,1);
                  console.log("data",data);
                  console.log(typeof(data));
                  
                 }       
         });
         return data 
+    }
+
+    clearText(){
+      this.buttons.forEach(element=>{
+            if ((element["state"] == "on") && (element["text"].value() != '')){              
+                 element["text"].value('');
+                }       
+        });
+
     }
 
     sendButtonClicked(){
@@ -778,6 +804,16 @@ class Mail extends Application {
             return true;
         }
         return false;
+    }
+
+    emailUpdate(){
+      if (this.contacts.length<8){
+        var index = random(0,emails.length);
+        index = Math.floor(index);
+        this.contacts.push(emails[index]); 
+        this.createButton(emails[index]);
+        console.log(emails[index]);
+      }
     }
 
 
@@ -889,14 +925,20 @@ function mousePressed (){
 	  }
     if(windowClicked == mail){
 				mail.buttonClicked(); 
+
 				if (mail.sendButtonClicked()){
-					console.log("inside send clicked");
+          // temp [0] = email_text string , temp[1] = email_address string
 					var temp = mail.getText();
-					var payout = analyzeLetter(temp[0]);
-						bank.transfer(temp[1],payout);
+          if (temp[0] != undefined){
+            var payout = analyzeLetter(temp[0]);
+            bank.transfer(temp[1],payout);
+            mail.emailUpdate();
           }
+						
+        }
+
           else if( mail.clearButtonClicked()){
-         
+              mail.clearText();
               //
           }
         }
