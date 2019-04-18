@@ -100,7 +100,7 @@ function setup(){
 
   windowStack = new WindowStack();//Create the windowStack
   
-  report = new Report(0,0,'notes.png',500,700,0,0);
+  report = new Report(0,0,'notes.png',450,300,0,0);
 
   //start game with note app open
   windowStack.push(note);
@@ -565,19 +565,43 @@ class Bank extends Application{
 class Report extends Application {
 	constructor(x,y,pic,w,h,win_x, win_y){
 		super(x,y,pic,w,h,win_x, win_y)
+    this.threshold = 50000;
 	}
 	
 	genReportString(){
-		return ('Testing Testing I love Testing');
+    var balance = bank.balance;
+    var senders = bank.senders;
+    var transfers = bank.transfers;
+
+    var thresh = 'Your Quota for today was: $'+String(this.threshold);
+    var mailnum = 'Emails Sent: '+String(senders.length)
+    var transmean = 'Average Transfer: $'+String(Math.floor(balance/senders.length))
+    var totaltrans = 'Total Funds Acquired: $'+String(balance)
+
+    var metQ;
+    if (balance < this.threshold){
+      metQ = 'You did not meet your Quota. You have FAILED the Great State of Zanderia. You will be TERMINATED.'
+    } else {
+      metQ = 'You met your Quota! You have made the Great State of Zanderia proud. You will be PROMOTED.'
+    }
+
+		return thresh+'\n\n'+mailnum+'\n'+transmean+'\n'+totaltrans+'\n\n'+metQ
 	}
 	
 	drawWindow() {
+    var balance = bank.balance;
+
 		//variables to change window appearance
 		var font = ourFont;
 		var strokecolor = 50;
-		var bgcolor = 'wheat';
+    var bgcolor;
+    if (balance >= this.threshold){
+      bgcolor = 'palegreen';
+    } else{
+      bgcolor = 'lightcoral';
+    }
 		var apptitle = 'Daily Report';
-		var textsize_report = 15;
+		var textsize_report = 20;
 		
 		push();
 		this.win.textFont(font)
@@ -610,7 +634,7 @@ class Report extends Application {
 		this.win.textFont(font)
 		this.win.textAlign(LEFT);
 		this.win.textSize(textsize_report);
-		this.win.text(this.genReportString(),20,50,(this.w - 20),(this.h-110));
+		this.win.text(this.genReportString(),20,50,(this.w - 40),(this.h-45));
 		
 		image(this.win,this.win_x,this.win_y,this.w,this.h);
 		pop();
@@ -815,27 +839,22 @@ class Note extends Application{
 	this.win.textSize(textsize_notes);
 	this.win.text(this.message,20,50,(this.w - 20),(this.h-110));
 	
-	//Start button section
-	this.win.strokeWeight(2);
-	this.win.fill(bgcolor);
-	this.win.rect(5,this.h-150,(this.w - 10),(this.h-355));
-	
 	//actual start button
 	push();
 	if (started == false){
-		this.win.fill('limegreen');
+		this.win.fill('palegreen');
 	} else{
 		this.win.fill('#bfb8bf');
 	}
 	this.win.strokeWeight(1);
-	this.win.rect(25,this.h-125,this.w-50,95);
+	this.win.rect(10,this.h-70,this.w-20,60);
 	
 	this.win.strokeWeight(0);
 	this.win.textAlign(CENTER);
 	this.win.textSize(40);
 	this.win.fill(0);
 
-	this.win.text('START WORK DAY',this.w/2,this.h-70);
+	this.win.text('START WORK DAY',this.w/2,this.h-25);
 	pop();
 	
 		
@@ -843,10 +862,10 @@ class Note extends Application{
 	}
 	
 	startClick() {
-		if ((mouseX>this.win_x + 25)&&
-			(mouseX<this.win_x + this.w-50)&&
-			(mouseY>this.win_y + this.h-125)&&
-			(mouseY<this.win_y + this.h-30)&&
+		if ((mouseX>this.win_x + 10)&&
+			(mouseX<this.win_x + this.w-20)&&
+			(mouseY>this.win_y + this.h-70)&&
+			(mouseY<this.win_y + this.h-5)&&
 			(started == false)){
 				started = true;
 				timer.start()
