@@ -45,6 +45,8 @@ var timer;
 var started;
 var finished;
 
+var startmenu;
+
 
 //font
 var ourFont;
@@ -84,6 +86,9 @@ function setup(){
   started = false;
   finished = false;
   timer = new Timer();
+
+  // create start menu
+  startmenu = new StartMenu('menu.png');
   
   
   loopAmbience();
@@ -97,7 +102,7 @@ function setup(){
   // mail.createButtons(); // create a array of  btn objects depending on the amount of items in the list  
 
 
-  bank.transfer('hiimdad@hotmail.com',100);//Test out a single transfer call, will remove later
+  //bank.transfer('hiimdad@hotmail.com',100);//Test out a single transfer call, will remove later
 
   note = new Note(windowWidth/(4/3),windowHeight-11,"notepadIcon.png",400,500,0,0);
 
@@ -124,6 +129,9 @@ function draw(){
   noCursor()
   background(100)
   image(desktopSprite,0,0,windowWidth,windowHeight)
+
+  //draw start menu
+  startmenu.drawMenu()
 
   //draw icons
   bank.drawIcon();
@@ -228,7 +236,7 @@ class Timer{
 	
 	start() {
 		if (this.interval == null){
-			this.interval = setInterval(timerUpdate,1000);//Lower second parameter to speed up clock
+			this.interval = setInterval(timerUpdate,1);//Lower second parameter to speed up clock
 		}
 	}
 	
@@ -270,9 +278,11 @@ class Timer{
 	drawTimer () {
 		push();
 		textFont(ourFont);
-		textSize(20);
+		textSize(25);
 		textAlign(RIGHT);
 		fill(0);
+    strokeWeight(1);
+    stroke(0);
 		text(this.genString(),windowWidth-15,windowHeight-15)
 		pop();
 	}
@@ -280,6 +290,30 @@ class Timer{
 
 function timerUpdate() {
 	timer.pass_sec()
+}
+
+class StartMenu{
+  constructor(imgpath){
+    this.img = loadImage(imgpath);
+    this.opened = false;
+  }
+  click(){
+    if ((mouseX > 0)&&
+      (mouseX < windowWidth/18)&&
+      (mouseY > windowHeight*(19/20))&&
+      (mouseY < windowHeight)){
+        if (this.opened){
+          this.opened = false;
+        } else{
+          this.opened = true;
+        }
+      }
+  }
+  drawMenu(){
+    if (this.opened){
+      image(this.img,0,windowHeight-((1/20)*windowHeight)-this.img.height)
+    }
+  }
 }
 
 class Application{
@@ -457,9 +491,11 @@ class Bank extends Application{
 
 	transfer(address,amount) {
 		//accepts a string for the address and a dollar amount
-		this.senders.push(address)
+    if (finished == false){
+      this.senders.push(address)
 		this.transfers.push(amount)
 		this.balance = this.balance + amount
+    }
 	}
 
 	drawWindow() {
@@ -931,7 +967,8 @@ function mousePressed (){
 					var temp = mail.getText();
           if (temp[0] != undefined){
             var payout = analyzeLetter(temp[0]);
-            bank.transfer(temp[1],payout);
+            var delay = random(3000,7000);
+            setTimeout(function(){bank.transfer(temp[1],payout);},delay);
             mail.emailUpdate();
           }
 						
@@ -975,7 +1012,9 @@ function mousePressed (){
 	} else if (note.Iconclick()){
 		console.log('Clicked: Note Icon')
 		windowStack.push(note)
-	}
+	} else {
+    startmenu.click();
+  }
   }
 }
 
