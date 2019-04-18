@@ -5,6 +5,9 @@ var txt = [];
 var counts = {};
 var keys = [];
 var allwords = [];
+//TODO1
+var newwords = [];
+//TODO2
 
 var bonuswords = {
   'rich': 1,
@@ -860,6 +863,10 @@ function analyzeLetter(letter) {
   var w = letter.split(/\W+/);
   
   var total = 0;
+	//TODO1
+  fillNewWords(w);
+  similarity(w);
+	//TODO2
 
   for(var i = 0; i < w.length; i++ ) {
     if(w[i] in counts) {
@@ -875,6 +882,27 @@ function analyzeLetter(letter) {
 
   return money_round(total);
 }
+
+//TODO1
+function similarity(letter) {
+  return -1;
+
+}
+
+function fillNewWords(letter) {
+  console.log(newwords);
+
+  for(var i = 0; i < letter.length; i++ ) {
+
+    if(newwords.indexOf(letter[i]) == -1) {
+      newwords.push(letter[i]);      
+    }
+    
+  }
+
+  console.log(newwords);
+}
+//TODO2
 
 function keyWordCheck(w) {
   var total = 0;
