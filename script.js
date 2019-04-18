@@ -559,16 +559,14 @@ class Bank extends Application{
     var amtflr = Math.floor(amount);
 		//accepts a string for the address and a dollar amount
     if (finished == false){
-      this.senders.push(address);
+		this.senders.push(address);
 		this.transfers.push(amtflr);
 		this.balance = this.balance + amtflr;
-    if(amount > 0){
-      playChachingSound()
-    }
-    else{
-      playBuzzSound()
-    }
-    
+		if(amtflr > 0){
+			playChachingSound()
+		} else {
+			playBuzzSound()
+		}
     }
 	}
 
@@ -955,7 +953,7 @@ class Note extends Application{
 	this.win.rectMode(CORNER);
 	this.win.fill(bgcolor);
 	this.win.rect(0,0,this.w-1,this.h-1);
-
+	
 	//Top Bar of Program
 	this.win.strokeWeight(2);
 	this.win.rect(5,5,(this.w - 10),30);
