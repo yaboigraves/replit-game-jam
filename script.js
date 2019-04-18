@@ -1,6 +1,5 @@
 //vars for parsing 
 
-
 var txt = [];
 var counts = {};
 var keys = [];
@@ -54,13 +53,8 @@ var ourFont;
 //start button pressed function 
 function startButtonClicked(){
   if(dist(mouseX,mouseY,windowHeight-21,20) > 100 && mouseIsPressed){
-
     ellipse(mouseX,mouseY,50,50);
-
   }
-
-
-
 
 }
 
@@ -98,7 +92,8 @@ function setup(){
   //mail application (x,y,"pic file name",width,height,window_x,window_y)
   mail = new Mail(windowWidth/2,windowHeight-11,"mailIcon.png",1100,500,0,0);
   bank = new Bank(windowWidth/4,windowHeight-11,"bankingIcon.png",350,400,0,0);
-  mail.createButtons();
+  mail.createButtons(); // create a array of  btn objects depending on the amount of items in the list  
+
   bank.transfer('hiimdad@hotmail.com',100);//Test out a single transfer call, will remove later
 
   note = new Note(windowWidth/(4/3),windowHeight-11,"notepadIcon.png",400,500,0,0);
@@ -141,16 +136,20 @@ function draw(){
   windowStack.drawWindows();
 
   // this line is used to update the position of the editor by redrawing it according to mail's app window x & y position
-  mail.editor.position(mail.win_x+350, mail.win_y+50);
+  // mail.editor.position(mail.win_x+350, mail.win_y+50);
 
   //only show text box if mail app is on top.
   //Switch method to appInstack(mail) to show text box when mail app is opened at all.
-  if (windowStack.getTopApp() == mail){
-	  mail.editor.show();
-  } else {
-	  mail.editor.hide();
-  }
+  for (var i =0; i < mail.buttons.length; i++){
+      mail.buttons[i]["text"].position(mail.win_x+350, mail.win_y+50); 
+      if ((windowStack.getTopApp() == mail) && mail.buttons[i]["state"]=="on"){
+      mail.buttons[i]["text"].show();
+      }
+      else if ((windowStack.getTopApp() != mail) || mail.buttons[i]["state"]=="off") {
+      mail.buttons[i]["text"].hide();
+      }
 
+  }
   //draw mouse
   drawMouse()
 }
@@ -207,7 +206,6 @@ class WindowStack{
 		}
 		return(false);
 	}
-
 }
 
 function drawMouse(){
@@ -344,57 +342,67 @@ class Application{
 	//Minimize/Exit button
 	this.win.strokeWeight(2);
 	this.win.fill('lightcoral');
-    this.win.image(xIconGrey,this.w-31,7,25,25);
+  this.win.image(xIconGrey,this.w-31,7,25,25);
 	
 
     //draws the window
 	image(this.win,this.win_x,this.win_y,this.w,this.h);
 
-    //draws email button area in mail application
-    fill("#a39ca3");
-    rect(this.win_x+25,this.win_y+50,this.button_area["w"], this.button_area["h"], 20);
+  //draw send btn
+  fill(150);
+  rect(this.win_x+this.send_btn_position["x"], this.win_y+ this.send_btn_position["y"], 80,23); 
+  fill(0);
+  text("Send",this.win_x+this.send_btn_position["x"]+22, this.win_y+this.send_btn_position["y"]+5,70,23);  
+
+  //draws clear btn
+  fill(150);
+  rect(this.win_x+this.clear_btn_position["x"], this.win_y+this.clear_btn_position["y"], 80,23); 
+  fill(0);
+  text("Clear",this.win_x+this.clear_btn_position["x"]+22,this.win_y+this.clear_btn_position["y"]+5,70,23);
+    
+
+  //draws email button area in mail application
+  fill("#a39ca3");
+  rect(this.win_x+25,this.win_y+50,this.button_area["w"], this.button_area["h"]);
 
     //draws email buttons in mail application
     var button_position = {"x":this.win_x+35 , "y":this.win_y+60}; // this line is used to reset position var
 
     //loop thru all element in buttons array. The amount of button will depend of the emails we give it
-    this.buttons.forEach(element=>{
-
-    if (element["status"] == "on" ){
-
-        //button rect
-        fill("#575657");
-        strokeWeight(3);
-        stroke('#7395AE');
-        rect(button_position["x"], button_position["y"], this.button_area["w"]-20, this.button_area["h"]/5, 20);
-
-
-        //button text
-        fill(0);
-        strokeWeight(1);
-        textSize(14);
-        text(element["email"], button_position["x"]+40, button_position["y"]+40, this.button_area["w"]-10, 30);
-
-    }
-    else{
-
-        fill("#bfb8bf");
-        strokeWeight(2);
-        stroke(0);
-        rect(button_position["x"], button_position["y"], this.button_area["w"]-20, this.button_area["h"]/5, 20);
+  this.buttons.forEach(element=>{
+        
+          if (element["state"] == "on" ){
+              // if button is on, we'll fill a diff color 
+              //button rect
+              fill(200);
+              strokeWeight(3);
+              stroke('#7395AE'); 
+              rect(button_position["x"], button_position["y"], this.button_area["w"]-20, 39); // offset is 20 pixel for width & 20 for height 
 
 
-        fill(0);
-        stroke(15);
-        strokeWeight(1);
-        textSize(14);
-        text(element["email"], button_position["x"]+40, button_position["y"]+40, this.button_area["w"]-10, 30);
-    }
+              //button text
+              fill(0);    
+              strokeWeight(1);
+              textSize(14);    
+              text(element["email"], button_position["x"]+40, button_position["y"]+15, this.button_area["w"]-10, 30);
+
+          }  
+          else{
+
+              fill(200);
+              strokeWeight(2);
+              stroke(0); 
+              rect(button_position["x"], button_position["y"], this.button_area["w"]-20, 39);
 
 
-    // update next button's position
-    button_position["y"] += this.button_area["h"]/5+10;
-
+              fill(0);    
+              stroke(15);        
+              strokeWeight(1);
+              textSize(14);    
+              text(element["email"], button_position["x"]+40, button_position["y"]+15, this.button_area["w"]-10, 30);
+          } 
+      // update next button's position  
+      button_position["y"] += 39+10;
     });
 	pop();
   }
@@ -620,10 +628,10 @@ class Mail extends Application {
         this.editor_y = this.win_y+50;
         this.editor_w = 700;
         this.editor_h = 400;
-        this.editor = createElement('textarea');
-        this.editor.position(this.editor_x,this.editor_y); //init. position
-        this.editor.size(this.editor_w, this.editor_h);
-        this.editor.attribute("maxlength","1400");
+        // this.editor = createElement('textarea');
+        // this.editor.position(this.editor_x,this.editor_y); //init. position
+        // this.editor.size(this.editor_w, this.editor_h);
+        // this.editor.attribute("maxlength","1400");
 
         /* the buttons attribute will be a list of dicitionaries.
           Each button will have the following attributes:
@@ -635,11 +643,21 @@ class Mail extends Application {
         this.buttons = [];
         this.button_area = {
           "w":300,
-          "h":400
+          "h":405
         };
 
         //a list to store all victim emails for the day
         this.contacts=["swagmaster212@hotmales.com","totallyyourgrandma@gmail.com"] ;
+
+        this.send_btn_position = {
+            "x":950,
+            "y":465
+        };
+        
+        this.clear_btn_position ={
+            "x":850,
+            "y":465
+        }
 
 
 	}
@@ -659,17 +677,86 @@ class Mail extends Application {
     }
     return true;
   }
-    createButtons(){
-      for (var i =0; i<this.contacts.length; i++){
-        this.buttons.push({"state":"off", "email":this.contacts[i]});
+
+  createButton(email_address){
+          var textarea = createElement('textarea');
+          textarea.position(this.editor_x,this.editor_y); 
+          textarea.size(this.editor_w, this.editor_h);
+          textarea.attribute("maxlength","1400");
+          textarea.hide();
+          this.buttons.push( {"state":"off", "email":email_address, "text":textarea} );       
       }
-    console.log(this.buttons);
+
+  createButtons(){
+          for (var i =0; i<this.contacts.length; i++){
+  //            this.buttons.push( {"state":"off", "email":this.contacts[i], "data":createElement('textarea')} ); 
+              this.createButton(this.contacts[i]);
+          }
+          console.log("All the buttons",this.buttons);            
+      }
+  //check if any of the button in the arr is pressed and set status flag 
+      buttonClicked(){
+          var button_position = {"x":this.win_x+35 , "y":this.win_y+60}; // inital position of the first button
+          for(var i=0 ; i<this.buttons.length; i++){
+              if((mouseX <= button_position["x"]+ this.button_area["w"]-20) && (mouseX >= button_position["x"])
+                  && (mouseY <= button_position["y"] + 39) &&( mouseY >= button_position["y"])){
+                  
+                  console.log("button", i,"is clicked");
+                  
+                  if(this.buttons[i]["state"]=="off"){
+                      this.buttons[i]["state"] = "on";
+                  }
+                  else if(this.buttons[i]["state"] == "on"){
+                      this.buttons[i]["state"] = "off";
+                  }    
+              }
+          button_position["y"] += 39+10; //update offset for the position of the next button   
+          }
+                  
+      }
+
+     getText(){
+//        var button_position = {"x":this.win_x+35 , "y":this.win_y+60}; // inital position of the first button
+        var data;
+        this.buttons.forEach(element=>{
+            if ((element["state"] == "on")&& (element["text"].value() != '')){              
+                 data = element["text"].value();
+                 element["text"].remove();
+                 var index = this.buttons.indexOf(element);
+                 this.buttons.splice(index, 1); // remove 1 item from that index
+                
+                 console.log("data",data);
+                 console.log(typeof(data));
+                 
+                }       
+        });
+        return data 
     }
 
-    buttonclick(){
-
-
+    sendButtonClicked(){
+        if ((mouseX <= this.win_x + this.send_btn_position["x"] + 80 &&
+            mouseX >= this.win_x + this.send_btn_position["x"]) &&
+            (mouseY >= this.win_y +this.send_btn_position["y"]  &&
+            mouseY <=this.win_y +this.send_btn_position["y"]+23 ))
+            {
+            console.log("The SEND btn has been clicked")
+            return true;
+        }
+        return false;
     }
+
+    clearButtonClicked(){
+        if ((mouseX <= this.win_x + this.clear_btn_position["x"] + 80 &&
+            mouseX >= this.win_x + this.clear_btn_position["x"]) &&
+            (mouseY >= this.win_y +this.clear_btn_position["y"]  &&
+            mouseY <=this.win_y +this.clear_btn_position["y"]+23 ))
+            {
+            console.log("The CLEAR btn has been clicked")
+            return true;
+        }
+        return false;
+    }
+
 
 }
 
@@ -782,9 +869,17 @@ function mousePressed (){
 	  if (windowClicked == note){
 		  windowClicked.startClick()
 	  }
-      if((windowClicked == Mail) && mail.buttonClicked()){
-
-
+    if(windowClicked == mail){
+          mail.buttonClicked(); 
+          if (mail.sendButtonClicked()){
+            console.log("inside send clicked");
+            var temp = mail.getText();
+            console.log("heres the return",temp);
+          }
+          else if( mail.clearButtonClicked()){
+         
+              //
+          }
         }
 
 
