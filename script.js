@@ -236,7 +236,7 @@ class Timer{
 	
 	start() {
 		if (this.interval == null){
-			this.interval = setInterval(timerUpdate,1);//Lower second parameter to speed up clock
+			this.interval = setInterval(timerUpdate,1000);//Lower second parameter to speed up clock
 		}
 	}
 	
