@@ -801,23 +801,25 @@ class Bank extends Application{
 		this.win.image(xIconBlue,this.w-31,7,25,25);
 
 		//Balance tracker
+		push();
 		this.win.strokeWeight(2);
-		this.win.fill(bgcolor);
+		this.win.fill(0);
 		this.win.rect(5,40,(this.w - 10),75);
 
 		this.win.strokeWeight(0);
-		this.win.fill(0);
+		this.win.fill(255);
 		this.win.textSize(20);
 		this.win.textAlign(LEFT);
 		this.win.text('Your Balance:',10,65);
 
-		this.win.strokeWeight(4);
+		this.win.strokeWeight(0);
 		this.win.fill('springgreen');
 		this.win.textSize(30);
 		this.win.textAlign(RIGHT);
 		this.win.textFont(ourFont);
 		this.win.text(String(this.balance)+' USD',this.w-10,110);
 		this.win.textFont(ourFont);
+		pop();
 
 		//Recent transfers
 		this.win.strokeWeight(2);
@@ -881,7 +883,13 @@ class Report extends Application {
 
     var thresh = 'Your Quota for today was: $'+String(this.threshold);
     var mailnum = 'Emails Sent: '+String(senders.length)
-    var transmean = 'Average Transfer: $'+String(Math.floor(balance/senders.length))
+	
+	var tmnum = String(Math.floor(balance/senders.length))
+	
+	if (tmnum == 'NaN'){
+		tmnum = '0';
+	}
+    var transmean = 'Average Transfer: $'+tmnum
     var totaltrans = 'Total Funds Acquired: $'+String(balance)
 
     var metQ;
