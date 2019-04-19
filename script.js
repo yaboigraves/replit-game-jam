@@ -601,7 +601,8 @@ class Application{
 	var bgcolor = '#bfb8bf';
 	var apptitle = 'Mail';
 
-	this.win.textFont(font)
+	this.win.textFont(ourFont)
+	textFont(ourFont)
 
 	//Background and Outline Rect (DRAW FIRST)
 	this.win.stroke(strokecolor);
@@ -664,7 +665,7 @@ class Application{
               //button text
               fill(0);    
               strokeWeight(1);
-              textSize(14);    
+              textSize(14);   
               text(element["email"], button_position["x"]+40, button_position["y"]+15, this.button_area["w"]-10, 30);
 
           }  
