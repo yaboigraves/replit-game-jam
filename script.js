@@ -1217,6 +1217,7 @@ class Note extends Application{
 			(started == false)){
 				started = true;
 				timer.start()
+				windowStack.push(mail);
 		}
 	}
 
