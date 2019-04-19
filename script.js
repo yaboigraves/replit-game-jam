@@ -129,10 +129,7 @@ var bonuswords_grandma = {
     'kidnap':1,
     'kidnapping':1,
     'kill':1,
-    
-    
-    'bank':1,
-    'bills':1,
+
     'payment':1,
     'due':1,
     'fee':1,
@@ -140,13 +137,7 @@ var bonuswords_grandma = {
     'pgne':1,
     'pg&e':1,
     'overdue':1,
-    'late':1,
-    'quickly':1,
-    'urgent':1,
-    'wire':1,
-    'check':1,
-    'checks':1,
-    'cash':1,
+
     
     
     
@@ -198,26 +189,11 @@ var bonuswords_gamers ={
     'hackers':1,
     'email':1,
     
-    'bank':1,
-    'bills':1,
-    'payment':1,
-    'due':1,
-    'fee':1,
-    'power':1,
-    'pgne':1,
-    'pg&e':1,
-    'overdue':1,
-    'late':1,
-    'quickly':1,
-    'urgent':1,
-    'wire':1,
     'check':1,
     'checks':1,
     'cash':1,
     'winning':1,
     'transaction':1,
-    
-    
     
     
         
@@ -227,8 +203,7 @@ var bonuswords_gamers ={
 var files = [ 'n2.txt', 'n1.txt', 'n3.txt', 'n4.txt', 'n5.txt'];
 
 
-var emails = ["StevenEllison@Gmail.com","RAncheta@hotmail.com","Dukope@papersplea.se","PBWolf@gmail.com","michaelS@gmail.com","coryG@gmail.com","jKarbowiak@gmail.com","NraySingleton@hotmail.com","AColtrane@gmail.com","matt@lfhh.com","theredhead242@gmail.com","BSimpson@gmail.com","swarvy@paxico.com","instablip@fuzzo.com","bigChungus@hotmail.com","totallyNotABot@gmail.com","hHefner@gmail.com","bObama@gmail.com","mtendreart@bfeeder.com","halfMeat@gmail.com","murphyMan@gmail.com","eSweatshirt@gmail.com","tDawg@tdawg.co","mitch@mitch.com","jorgi@papersplea.se","pleaseHelp@me.com","bigManTyrone@gmail.com","jackieChen@gmail.com","dakotaIsCool@gmail.com","htranica@gmail.com","shamana@shama.na","ideism@innerocean.com","sGorocia@gmail.com","gKitchen@grantKitchen.com","kojimaSan@kojimastudios.jp","rHuber@gmail.com","sammySlik@gmail.com","gConstanza@hotmail.com"]
-
+var emails = ["ngleton@hotmail.com","AColtrane@gmail.com","matt@lfhh.com","theredhead242@gmail.com","BSimpson@gmail.com","swarvy@paxico.com","instablip@fuzzo.com","bigChungus@hotmail.com","totallyNotABot@gmail.com","hHefner@gmail.com","bObama@gmail.com","mtendreart@bfeeder.com","halfMeat@gmail.com","murphyMan@gmail.com","eSweatshirt@gmail.com","tDawg@tdawg.co","mitch@mitch.com","jorgi@papersplea.se","pleaseHelp@me.com","bigManTyrone@gmail.com","jackieChen@gmail.com","dakotaIsCool@gmail.com","htranica@gmail.com","shamana@shama.na","ideism@innerocean.com","sGorocia@gmail.com","gKitchen@grantKitchen.com","kojimaSan@kojimastudios.jp","rHuber@gmail.com","sammySlik@gmail.com","gConstanza@hotmail.com","epicgamer@gmail.com","grandmaMittens@aol.net","xxx_dragon@gmail.com","johnOldman@gmail.com","fortniteLover@gmail.com","epicGamerNayNay@gmail.com","chungusAmongUs@gmail.com","vbucks@gmail.com","xxx@gmail.com","mamaBoof@gmail.com","ninjaLover2008","ChristServant@gmail.com","dragonSlayer420@gmail.com","mamaCookies@aol.com","IloveMyGrandkids@gmail.com","grandmaJenkins@gmail.com","jerma@gmail.com","vinny@thebuvins.com","alan@thealchemist.com","mf@doom.com","seba@jun.com","uyama@gmail.jp","gBush@gmail.com","grandmaKankers@gmail.com"]
 
 var cnv;
 
@@ -1381,18 +1356,61 @@ function fillNewWords(letter) {
 }
 
 
-function keyWordCheck(w) {
+function keyWordCheck(w, emailAddress) {
   var total = 0;
+  console.log("In general");
 
-  for(var i = 0; i < w.length; i++ ) {
-    if(w[i] in bonuswords) {
-      var mult = bonuswords[w[i]];
-      
-      total += (20 * mult);
-      bonuswords[w[i]] *= 0.5;
-    }
-  }
-  return total;
+	total += calcKey(w);
+	
+	if(emailAddress == 'grandma') {
+		total += gmaDict(w);
+	}
+	if(emailAddress == 'gamer') {
+		total += gmrDict(w);
+	}
+	
+	return total;
+}
+
+function calcKey(w) {
+	var total = 0;
+	for(var i = 0; i < w.length; i++) {
+	if(w[i] in bonuswords) {
+		var mult = bonuswords[w[i]];
+		
+		total += (20 * mult);
+		bonuswords[w[i]] *= 0.5;
+		}
+	}
+	return total;
+}
+
+function gmaDict(w) {
+	console.log("In gma");
+	var total = 0;
+	for(var i = 0; i < w.length; i++) {
+		if(w[i] in bonuswords_grandma) {
+			var mult = bonuswords_grandma[w[i]];
+			
+			total += (20 * mult);
+			bonuswords_grandma[w[i]];
+		}
+	}
+	return total;
+}
+
+function gmrDict(w) {
+	console.log("In gmr");
+	var total = 0;
+	for(var i = 0; i < w.length; i++) {
+		if(w[i] in bonuswords_gamers) {
+			var mult = bonuswords_gamers[w[i]];
+			
+			total += (20 * mult);
+			bonuswords_gamers[w[i]] *= 0.5;
+		}
+	}
+	return total;
 }
 
 function money_round(num) {
