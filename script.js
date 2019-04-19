@@ -590,7 +590,7 @@ class Application{
   }
 
   drawIcon() {
-	image(this.icon, this.x-(this.iconsize/2), this.y - 36, this.iconsize,42 );
+	image(this.icon, this.x-(this.iconsize/2), this.y - 33, this.iconsize,42 );
   }
 
   drawWindow() { //just some placeholder draws to test out blank windows
@@ -716,8 +716,8 @@ class Application{
 	////Checks to see if the desktop icon is being clicked
 	if (mouseX > (this.x-(this.iconsize/2)) &&
 		mouseX < (this.x-(this.iconsize/2) + this.iconsize) &&
-		mouseY > (this.y-(this.iconsize/2)) &&
-		mouseY < (this.y-(this.iconsize/2) + this.iconsize)){
+		mouseY > (this.y - 33) &&
+		mouseY < (this.y - 33 + 42)){
 			return true;
 	}
 	return false;
@@ -755,13 +755,13 @@ class Bank extends Application{
 	}
 	
 	drawIcon(){
-		image(this.icon, this.x-(this.iconsize/2), this.y - 36, this.iconsize,42 );
+		image(this.icon, this.x-(this.iconsize/2), this.y - 33, this.iconsize,42 );
 		if (this.notif != 'none'){
 			push();
 			fill(this.notif);
 			stroke(0);
 			strokeWeight(1);
-			circle(this.x-(this.iconsize/2), this.y - 36,10)
+			circle(this.x-(this.iconsize/2), this.y - 33,10)
 			pop();
 		}
 	}
