@@ -6,6 +6,7 @@ var keys = [];
 var allwords = [];
 
 var newwords = [];
+var firstpass = true;
 
 var bonuswords = {
   'rich': 1,
@@ -24,7 +25,6 @@ var bonuswords = {
   'extravagent': 1,
   'credit': 1,
   'grandson': 1,
-  'vbucks': 1,
   'transfer': 1,
   'need': 1,
   'money': 1, 
@@ -335,13 +335,7 @@ function setup(){
   windowStack.push(note);
 	
 	// For message parsing
-	/*
-	  buildDict();
-	  // console.log(analyzeLetter(letter));
-	  var money = analyzeLetter(letter);
-	  console.log(money);	
-	  
-	  */
+
 }
 
 function draw(){
@@ -849,7 +843,7 @@ class Bank extends Application{
 class Report extends Application {
 	constructor(x,y,pic,w,h,win_x, win_y){
 		super(x,y,pic,w,h,win_x, win_y)
-    this.threshold = 420;
+    this.threshold = 225;
 	}
 	
 	genReportString(){
@@ -1113,7 +1107,7 @@ class Note extends Application{
 		super(x,y,pic,w,h,win_x, win_y)
 
 		//Note specifics
-			this.message = "Hello new hire, here's a couple notes for you so you can get started for your first day. Remember, you MUST meet the quota today or you will be terminated. Glory to Zanderia! \n \nTodays Quota : 420.00 USD                         1.Open the mail app to begin sending emails to silly foreigner contacts. Be as creative as you can, and try to persuade them in the emails to route money to our bank account, the info is already attached with the email just come up with the best story you can.          \n2.Once you send the mail it will take a bit and then the stupid foreigner should send you some money, you can keep track of what you've made today in your Banking application.\n3.The workday is from 9AM to 5PM, time flies when you're working hard though so meet your quota for the day if you want to get paid. Click the Start Work Day button when you're ready Officer. Good luck!";
+			this.message = "Hello new hire, here's a couple notes for you so you can get started for your first day. Remember, you MUST meet the quota today or you will be terminated. Glory to Zanderia! \n \nTodays Quota : 225 USD                         1.Open the mail app to begin sending emails to silly foreigner contacts. Be as creative as you can, and try to persuade them in the emails to route money to our bank account, the info is already attached with the email just come up with the best story you can.          \n2.Once you send the mail it will take a bit and then the stupid foreigner should send you some money, you can keep track of what you've made today in your Banking application.\n3.The workday is from 9AM to 5PM, time flies when you're working hard though so meet your quota for the day if you want to get paid. Click the Start Work Day button when you're ready Officer. Good luck!";
 	}
 
 	drawWindow() { //just some placeholder draws to test out blank windows
@@ -1220,7 +1214,7 @@ function mousePressed (){
           // temp [0] = email_text string , temp[1] = email_address string
 					var temp = mail.getText();
           if (temp[0] != undefined){
-            var payout = analyzeLetter(temp[0]);
+            var payout = analyzeLetter(temp[0],email_identifier(temp[1]));
             var delay = random(3000,7000);
             setTimeout(function(){bank.transfer(temp[1],payout);},delay);
             mail.emailUpdate();
@@ -1305,31 +1299,39 @@ function mouseClicked() {
 
 
 
-function analyzeLetter(letter) {
+function analyzeLetter(letter,emailAddress) {
   var w = letter.split(/\W+/);
   
   var total = 0;
-
-  // fillNewWords(w);
-  // if( similarity(w) >=50.0) {
-  //   return 0;
-  // } 
-  // else {
-    for(var i = 0; i < w.length; i++ ) {
-      if(w[i] in counts) {
-        var tfidf = counts[w[i]].tfidf;
-        if(tfidf > 0) {
-          var df = counts[w[i]].df
-          var ttotal = tfidf / df * 0.6;
-          total += ttotal;
-        }
-      } 
-    }
-    total += keyWordCheck(w);
-
-    return money_round(total);
-  // }
+	fillNewWords(w);
+	if(firstpass) {
+		firstpass = false;
+		return calcMoney(w, emailAddress);
+	}
+	if(similarity(w) >= 85.0) {
+		return 0;
+	} else {
+		return calcMoney(w, emailAddress);
+	}
 }
+	
+function calcMoney(w, emailAddress) {
+	var total = 0;
+	for(var i = 0; i < w.length; i++) {
+		if(w[i] in counts) {
+			var tfidf = counts[w[i]].tfidf;
+			if(tfidf > 0) {
+				var df = counts[w[i]].df;
+				var ttotal = tfidf / df * 0.6;
+			total += ttotal;
+			}
+		}
+	}
+	total += keyWordCheck(w, emailAddress);
+	
+	return money_round(total);
+}
+
 
 function similarity(letter) {
   var percent;
