@@ -1,17 +1,19 @@
-body::-webkit-scrollbar { display: none; }
+body::-webkit-scrollbar { 
+  display: none; 
+}
 
-html, body {margin: 0; overflow: hidden; font-family: FreePixel;
+html, body {
+  margin: 0; 
+  overflow: hidden; 
+  font-family: FreePixel;
+}
 
-
-
-  }
-
-textarea{
-    resize: none;
-    overflow: hidden;
+textarea {
+  resize: none;
+  overflow: hidden;
 }
 
 @font-face {
   font-family: FreePixel;
-  src: url(FreePixel.ttf);
+  src: url(resources/FreePixel.ttf);
 }

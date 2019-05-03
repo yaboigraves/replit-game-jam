@@ -200,7 +200,7 @@ var bonuswords_gamers ={
 }
 
 
-var files = [ 'n2.txt', 'n1.txt', 'n3.txt', 'n4.txt', 'n5.txt'];
+var files = [ 'resources/training/n2.txt', 'resources/training/n1.txt', 'resources/training/n3.txt', 'resources/training/n4.txt', 'resources/training/n5.txt'];
 
 
 var emails = ["ngleton@hotmail.com","AColtrane@gmail.com","matt@lfhh.com","theredhead242@gmail.com","BSimpson@gmail.com","swarvy@paxico.com","instablip@fuzzo.com","bigChungus@hotmail.com","totallyNotABot@gmail.com","hHefner@gmail.com","bObama@gmail.com","mtendreart@bfeeder.com","halfMeat@gmail.com","murphyMan@gmail.com","eSweatshirt@gmail.com","tDawg@tdawg.co","mitch@mitch.com","jorgi@papersplea.se","pleaseHelp@me.com","bigManTyrone@gmail.com","jackieChen@gmail.com","dakotaIsCool@gmail.com","htranica@gmail.com","shamana@shama.na","ideism@innerocean.com","sGorocia@gmail.com","gKitchen@grantKitchen.com","kojimaSan@kojimastudios.jp","rHuber@gmail.com","sammySlik@gmail.com","gConstanza@hotmail.com","epicgamer@gmail.com","grandmaMittens@aol.net","xxx_dragon@gmail.com","johnOldman@gmail.com","fortniteLover@gmail.com","epicGamerNayNay@gmail.com","chungusAmongUs@gmail.com","vbucks@gmail.com","xxx@gmail.com","mamaBoof@gmail.com","ninjaLover2008","ChristServant@gmail.com","dragonSlayer420@gmail.com","mamaCookies@aol.com","IloveMyGrandkids@gmail.com","grandmaJenkins@gmail.com","jerma@gmail.com","vinny@thebuvins.com","alan@thealchemist.com","mf@doom.com","seba@jun.com","uyama@gmail.jp","gBush@gmail.com","grandmaKankers@gmail.com"]
@@ -258,11 +258,11 @@ function email_identifier(email_add) {
     
     // goes thru all the keywords in the id_list and return the category of a given email 
     var name  = email_add.substring(0, email_add.lastIndexOf("@")); 
-    console.log(name);
+    //console.log(name);
      for (category in id_lists){
-         console.log("heres the cat.:", category);
+         //console.log("heres the cat.:", category);
          for (var i = 0; i <id_lists[category].length; i++){
-             console.log(id_lists[category][i]);
+             //console.log(id_lists[category][i]);
              
              // if the email name include the sub string in the id_list
              if(name.includes(id_lists[category][i])){
@@ -276,20 +276,18 @@ function email_identifier(email_add) {
 
 function preload(){
   soundFormats('mp3', 'ogg','wav');
-  mySound = loadSound("mouseclicc.wav");
-  officeLoop = loadSound("officeLoop.mp3");
-  endOfDay = loadSound("endOfDay.mp3")
-  desktopSprite = loadImage("desktop.png");
-  ourFont = loadFont("FreePixel.ttf");
-  mailIcon = loadImage("mailIcon.png")
-  //xIcon = loadImage("xIcon.png")
-  startupSound = loadSound("startupSound.wav")
-  chaching = loadSound("chaching.wav")
-  notificationSound = loadSound("notificationSound.wav")
-  buzz = loadSound("buzz.mp3")
-  xIconGrey = loadImage("xIconGrey.png")
-  xIconBlue = loadImage("xIconBlu.png")
-  xIconYellow = loadImage("xIconYellow.png")
+  mySound = loadSound("resources/mouseclicc.wav");
+  officeLoop = loadSound("resources/officeLoop.mp3");
+  endOfDay = loadSound("resources/endOfDay.mp3")
+  desktopSprite = loadImage("resources/desktop.png");
+  ourFont = loadFont("resources/FreePixel.ttf");
+  startupSound = loadSound("resources/startupSound.wav")
+  chaching = loadSound("resources/chaching.wav")
+  notificationSound = loadSound("resources/notificationSound.wav")
+  buzz = loadSound("resources/buzz.mp3")
+  xIconGrey = loadImage("resources/xIconGrey.png")
+  xIconBlue = loadImage("resources/xIconBlu.png")
+  xIconYellow = loadImage("resources/xIconYellow.png")
 	
 	// For message parsing 
 	for(var i = 0; i < files.length; i++ ) {
@@ -300,7 +298,7 @@ function preload(){
 
 function setup(){
   // testing the email identifier 
-  console.log(email_identifier('lordpeace12321@example.com'));
+  //console.log(email_identifier('lordpeace12321@example.com'));
     
   playStartupSound();
   //create timer
@@ -309,15 +307,15 @@ function setup(){
   timer = new Timer();
 
   // create start menu
-  startmenu = new StartMenu('menu.png');
+  startmenu = new StartMenu('resources/menu.png');
   
   
   loopAmbience();
   cnv = createCanvas(windowWidth,windowHeight)
 
   //mail application (x,y,"pic file name",width,height,window_x,window_y)
-  mail = new Mail(windowWidth/2,windowHeight-11,"mailIcon.png",1100,500,0,0);
-  bank = new Bank(windowWidth/4,windowHeight-11,"bankingIcon.png",350,400,0,0);
+  mail = new Mail(windowWidth/2,windowHeight-11,"resources/mailIcon.png",1100,500,0,0);
+  bank = new Bank(windowWidth/4,windowHeight-11,"resources/bankingIcon.png",350,400,0,0);
   mail.emailFill();
   mail.buttons[0]["state"] = "on";
   // mail.createButtons(); // create a array of  btn objects depending on the amount of items in the list  
@@ -325,11 +323,11 @@ function setup(){
 
   //bank.transfer('hiimdad@hotmail.com',2.5);//Test out a single transfer call, will remove later
 
-  note = new Note(windowWidth/(4/3),windowHeight-11,"notepadIcon.png",400,500,0,0);
+  note = new Note(windowWidth/(4/3),windowHeight-11,"resources/notepadIcon.png",400,500,0,0);
 
   windowStack = new WindowStack();//Create the windowStack
   
-  report = new Report(0,0,'notepadIcon.png',450,300,0,0);
+  report = new Report(0,0,'resources/notepadIcon.png',450,300,0,0);
 
   //start game with note app open
   windowStack.push(note);
@@ -451,7 +449,8 @@ class Timer{
 	
 	start() {
 		if (this.interval == null){
-			this.interval = setInterval(timerUpdate,1000);//Lower second parameter to speed up clock
+      let me = this;
+			this.interval = setInterval(function(){me.pass_sec()},1000);//Lower second parameter to speed up clock
 		}
 	}
 	
@@ -501,10 +500,6 @@ class Timer{
 		text(this.genString(),windowWidth-15,windowHeight-15)
 		pop();
 	}
-}
-
-function timerUpdate() {
-	timer.pass_sec()
 }
 
 class StartMenu{
@@ -731,13 +726,15 @@ class Bank extends Application{
 			fill(this.notif);
 			stroke(0);
 			strokeWeight(1);
-			circle(this.x-(this.iconsize/2), this.y - 33,10)
+			circle(this.x-(this.iconsize/2), this.y - 33,15)
 			pop();
 		}
 	}
 
 	drawWindow() {
-		this.notif = 'none';
+    if (windowStack.getTopApp() == this){
+      this.notif = 'none';
+    }
 		//variables to change window appearance
 		var font_word = ourFont;
 		var font_num = ourFont;
@@ -1048,8 +1045,8 @@ class Mail extends Application {
                  var index = this.buttons.indexOf(element);
                  this.buttons.splice(index, 1); // remove 1 item from that index
                  this.contacts.splice(index,1);
-                //  console.log("data",data);
-                //  console.log(typeof(data));
+                //  //console.log("data",data);
+                //  //console.log(typeof(data));
                  
                 }       
         });
@@ -1252,13 +1249,13 @@ function mousePressed (){
   }else{//If NO window is clicked
 	//Check to see if any icons are being pressed
 	if (mail.Iconclick()){
-		//console.log('Clicked: Mail Icon');
+		////console.log('Clicked: Mail Icon');
 		windowStack.push(mail);
 	} else if (bank.Iconclick()){
-		//console.log('Clicked: Bank Icon')
+		////console.log('Clicked: Bank Icon')
 		windowStack.push(bank)
 	} else if (note.Iconclick()){
-	//	console.log('Clicked: Note Icon')
+	//	//console.log('Clicked: Note Icon')
 		windowStack.push(note)
 	} else {
     startmenu.click();
@@ -1344,7 +1341,7 @@ function similarity(letter) {
   }
 
   percent = money_round(found / newwords.length * 100);
-  console.log(percent)
+  ////console.log(percent)
 
   return percent;
 }
@@ -1360,7 +1357,7 @@ function fillNewWords(letter) {
 
 function keyWordCheck(w, emailAddress) {
   var total = 0;
-  console.log("In general");
+  ////console.log("In general");
 
 	total += calcKey(w);
 	
@@ -1388,7 +1385,7 @@ function calcKey(w) {
 }
 
 function gmaDict(w) {
-	console.log("In gma");
+	////console.log("In gma");
 	var total = 0;
 	for(var i = 0; i < w.length; i++) {
 		if(w[i] in bonuswords_grandma) {
@@ -1402,7 +1399,7 @@ function gmaDict(w) {
 }
 
 function gmrDict(w) {
-	console.log("In gmr");
+	////console.log("In gmr");
 	var total = 0;
 	for(var i = 0; i < w.length; i++) {
 		if(w[i] in bonuswords_gamers) {
@@ -1496,7 +1493,7 @@ function buildDict() {
   // // To look at the dictionary
   // for(var i = 0; i < keys.length; i++ ) {
   //   var key = keys[i];
-  //   console.log(key + " " + counts[key].tfidf);
+  //   //console.log(key + " " + counts[key].tfidf);
   // }
 }
 //sound functions 
